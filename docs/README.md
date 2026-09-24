@@ -1,10 +1,15 @@
 # docs
 
-## Read in this order
+## What each file answers
+
+Not a reading order. `AGENTS.md` "Start here" says which of these a task
+needs. `/plan` fills the product and design docs in the order its skill
+lists.
 
 | File | What it answers |
 | --- | --- |
 | [`progress.md`](progress.md) | Where the build stands, what is next and what is open. Read first |
+| [`specs/`](specs/README.md) | One spec per feature, and the template they follow |
 | [`product/intake.md`](product/intake.md) | The brief as it was pasted, and every question and answer before a doc was written |
 | [`product/brief.md`](product/brief.md) | What this is, who it is for, and what has to be true about it |
 | [`product/users.md`](product/users.md) | The people who use it, by role, and what each must never see |

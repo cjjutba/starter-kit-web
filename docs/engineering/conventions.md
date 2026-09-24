@@ -24,6 +24,13 @@ the path. Return a state object for the form, never throw for an expected
 failure. Forms use `useActionState` and show `fieldErrors` next to the field
 and `error` above the button.
 
+## Public write paths
+
+Anything a stranger can submit copies `src/app/privacy/request/actions.ts`:
+honeypot, rate limit by IP, validate, then act. A bot gets a quiet success.
+A person over the limit is told when to try again. The guards test fails
+a public action that skips either guard.
+
 ## Imports
 
 `@/` inside `src/app`, `src/components` and `src/content`. Relative inside

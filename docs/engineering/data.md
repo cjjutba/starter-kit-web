@@ -51,7 +51,14 @@ that needs its own data gets a branch from `main`. Deleting a branch always asks
 
 Ids are text UUIDs generated in the application. Every timestamp is
 `timestamptz` in UTC, and the organisation row's `timezone` decides how it
-renders. `src/lib/time/` is the only place that does date arithmetic.
+renders, with the zone labelled. `src/lib/time/` is the only place that
+does date arithmetic or imports date-fns. A new need is a new helper there.
+
+## Why no row level security
+
+Deliberately not in v1. It fights Better Auth, and a misconfigured policy
+is harder to see than a missing argument in code you can read. The scoped
+layer and its tests do the job instead.
 
 ## The tests
 
