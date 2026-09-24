@@ -4,8 +4,9 @@ import Link from "next/link";
 import { useState, type FormEvent } from "react";
 import { InputField } from "@/components/primitives/field";
 import { Pill } from "@/components/primitives/pill";
-import { Card } from "@/components/primitives/surfaces";
+import { authCopy } from "@/content/auth";
 import { authClient } from "@/lib/auth/client";
+import { CheckEmail } from "./check-email";
 
 // Sign up never signs in. The address has to be verified first, so a
 // success here is a card that says where the link went. The verification
@@ -16,7 +17,6 @@ import { authClient } from "@/lib/auth/client";
 export function SignUpForm({ next }: { next: string }) {
   const callbackURL = `/sign-in?next=${encodeURIComponent(next)}`;
   const [sent, setSent] = useState<string | null>(null);
-  const [resent, setResent] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [pending, setPending] = useState(false);
 
@@ -42,30 +42,8 @@ export function SignUpForm({ next }: { next: string }) {
     setSent(email);
   }
 
-  async function resend() {
-    if (!sent) return;
-    setPending(true);
-    await authClient.sendVerificationEmail({ email: sent, callbackURL });
-    setPending(false);
-    setResent(true);
-  }
-
   if (sent) {
-    return (
-      <Card tone="field" className="flex flex-col gap-4 p-5" role="status">
-        <p className="text-heading font-medium">Check your email</p>
-        <p className="text-body text-text-2">
-          A link to confirm {sent} is on its way. It stops working after an hour.
-          {process.env.NODE_ENV === "production" ? "" : " With MAIL_PROVIDER=log it is in the mail log, not an inbox."}
-        </p>
-        <div className="flex flex-wrap items-center gap-3">
-          <Pill variant="secondary" size="sm" onClick={resend} loading={pending} loadingLabel="Sending">
-            Send it again
-          </Pill>
-          {resent ? <span className="text-small text-text-2">Sent.</span> : null}
-        </div>
-      </Card>
-    );
+    return <CheckEmail email={sent} callbackURL={callbackURL} title={authCopy.checkEmail.sentTitle} body={authCopy.checkEmail.sent(sent)} />;
   }
 
   return (

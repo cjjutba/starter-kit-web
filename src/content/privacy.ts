@@ -10,6 +10,15 @@ export interface PrivacySection {
   paragraphs: string[];
 }
 
+// How long a request takes, said on the notice and on the request page.
+const answeredWithin = "fifteen working days";
+
+/** The deletion request page and the link to it from the notice. */
+export const deletionRequest = {
+  title: "Ask for your data to be deleted",
+  lead: `Tell us the email address on the account. Deletion is confirmed by email and finished within ${answeredWithin}.`,
+};
+
 const rights = product.contactEmail
   ? `Use the deletion request form or write to ${product.contactEmail}.`
   : "Use the deletion request form.";
@@ -49,7 +58,7 @@ export const privacyNotice = {
     {
       heading: "Your rights",
       paragraphs: [
-        `Under the Data Privacy Act of 2012 you can ask what is held about you, ask for it to be corrected, or ask for it to be deleted. ${rights} Requests are answered within fifteen working days.`,
+        `Under the Data Privacy Act of 2012 you can ask what is held about you, ask for it to be corrected, or ask for it to be deleted. ${rights} Requests are answered within ${answeredWithin}.`,
       ],
     },
   ] satisfies PrivacySection[],

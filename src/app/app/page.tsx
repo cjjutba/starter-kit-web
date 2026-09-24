@@ -6,6 +6,7 @@ import { Card } from "@/components/primitives/surfaces";
 import { requireOrganisation } from "@/lib/auth/session";
 import { forOrganisation } from "@/lib/db/scoped";
 import { formatShortDate } from "@/lib/time";
+import { appCopy } from "@/content/app";
 
 export const metadata: Metadata = { title: "Notes" };
 
@@ -30,7 +31,7 @@ export default async function NotesPage() {
       {notes.length === 0 ? (
         <Card className="p-6">
           <p className="text-heading font-medium">No notes yet</p>
-          <p className="mt-1 text-body text-text-2">The first one takes a title and whatever is worth remembering.</p>
+          <p className="mt-1 text-body text-text-2">{appCopy.notes.emptyLead}</p>
           <div className="mt-4">
             <Pill asChild variant="secondary" size="sm">
               <Link href="/app/notes/new">Write the first note</Link>

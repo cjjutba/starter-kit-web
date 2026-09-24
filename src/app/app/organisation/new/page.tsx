@@ -4,6 +4,7 @@ import { CreateOrganisationForm } from "@/components/app/organisation-forms";
 import { features } from "@/config";
 import { requireOrganisation } from "@/lib/auth/session";
 import { DEFAULT_TZ } from "@/lib/time";
+import { appCopy } from "@/content/app";
 
 export const metadata: Metadata = { title: "New organisation" };
 
@@ -16,7 +17,7 @@ export default async function NewOrganisationPage() {
   return (
     <div className="mx-auto w-full max-w-auth">
       <h1 className="text-title font-medium">New organisation</h1>
-      <p className="mt-2 text-body text-text-2">You become its owner and it opens straight away. Invite people from its organisation page.</p>
+      <p className="mt-2 text-body text-text-2">{appCopy.newOrganisation.lead}</p>
       <div className="mt-6">
         <CreateOrganisationForm timezone={organisation.timezone ?? DEFAULT_TZ} timezones={Intl.supportedValuesOf("timeZone")} />
       </div>

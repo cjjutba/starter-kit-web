@@ -16,6 +16,7 @@ import {
   updateMemberRole,
   type OrganisationFormState,
 } from "@/app/app/settings/actions";
+import { appCopy } from "@/content/app";
 
 // The people list and the two doors out. Anything that takes access away
 // asks in a modal that owns its work: the pill spins, the modal holds, and
@@ -92,7 +93,7 @@ export function MemberRow({
         open={open}
         onOpenChange={setOpen}
         title={`Remove ${member.name}?`}
-        description="They lose access to everything in this organisation. What they wrote stays."
+        description={appCopy.organisation.removeConfirm}
         confirmLabel="Remove"
         pendingLabel="Removing"
         destructive
@@ -143,7 +144,7 @@ export function LeaveOrganisation({ name }: { name: string }) {
         open={open}
         onOpenChange={setOpen}
         title={`Leave ${name}?`}
-        description="You lose access to everything in it. If you are its only owner, make someone else an owner first."
+        description={appCopy.organisation.leaveConfirm}
         confirmLabel="Leave"
         pendingLabel="Leaving"
         destructive
@@ -175,7 +176,7 @@ export function DeleteOrganisation({ name }: { name: string }) {
         open={open}
         onOpenChange={change}
         title={`Delete ${name}?`}
-        description="Everyone loses access and everything in it is gone. This cannot be undone."
+        description={appCopy.organisation.deleteConfirm}
         confirmLabel="Delete organisation"
         pendingLabel="Deleting"
         destructive

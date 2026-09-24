@@ -6,6 +6,7 @@ import { Card } from "@/components/primitives/surfaces";
 import { canManage as manages, isOwner, roleLabel } from "@/lib/auth/roles";
 import { requireOrganisation } from "@/lib/auth/session";
 import { DEFAULT_TZ } from "@/lib/time";
+import { appCopy } from "@/content/app";
 
 export const metadata: Metadata = { title: "Organisation" };
 
@@ -32,7 +33,7 @@ export default async function OrganisationSettingsPage() {
           />
         ) : (
           <p className="text-body text-text-2">
-            Times are shown in {organisation.timezone ?? DEFAULT_TZ}. An owner or admin can change the name and timezone.
+            {appCopy.organisation.readOnlyTimezone(organisation.timezone ?? DEFAULT_TZ)}
           </p>
         )}
       </Card>
@@ -40,7 +41,7 @@ export default async function OrganisationSettingsPage() {
       <Card as="section" className="flex flex-col gap-4 p-5">
         <h2 className="text-heading font-medium">Leaving</h2>
         <p className="text-small text-text-2">
-          Leaving takes your access away and keeps what you wrote. Deleting takes everything, for everyone.
+          {appCopy.organisation.leavingLead}
         </p>
         <div className="flex flex-wrap gap-3">
           <LeaveOrganisation name={organisation.name} />
