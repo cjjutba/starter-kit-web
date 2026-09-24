@@ -3,10 +3,16 @@ import type { Mail } from "./index";
 
 // Plain functions that return a message. Text first, html as a light
 // wrapper around the same words, so a client that strips html loses nothing.
+// Organisation names, inviter names and the deletion form's message are
+// typed by strangers, so every value is escaped before it becomes html.
+
+function escape(value: string): string {
+  return value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+}
 
 function html(title: string, paragraphs: string[]): string {
-  const body = paragraphs.map((p) => `<p style="margin:0 0 16px">${p}</p>`).join("");
-  return `<div style="font-family:system-ui,sans-serif;font-size:16px;line-height:1.5;max-width:560px;margin:0 auto;padding:24px"><h1 style="font-size:20px;font-weight:500;margin:0 0 24px">${title}</h1>${body}</div>`;
+  const body = paragraphs.map((p) => `<p style="margin:0 0 16px">${escape(p)}</p>`).join("");
+  return `<div style="font-family:system-ui,sans-serif;font-size:16px;line-height:1.5;max-width:560px;margin:0 auto;padding:24px"><h1 style="font-size:20px;font-weight:500;margin:0 0 24px">${escape(title)}</h1>${body}</div>`;
 }
 
 export function resetPasswordMail({ to, name, url }: { to: string; name: string; url: string }): Mail {
