@@ -1,20 +1,17 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { ChevronRight } from "lucide-react";
 import { Pill } from "@/components/primitives/pill";
 import { InputField, SelectField, TextareaField } from "@/components/primitives/field";
-import { Card, GuideCard, Row, Sheet } from "@/components/primitives/surfaces";
-import { ConfirmModal } from "@/components/primitives/modal";
+import { Card, GuideCard, Sheet } from "@/components/primitives/surfaces";
 import { Skeleton } from "@/components/ui/skeleton";
 import { ThemeToggle } from "@/components/theme-toggle";
 import { product } from "@/config";
 import { routeGroups } from "@/content/routes";
+import { ModalDemo, RowDemo } from "./demos";
 
 // Internal. Every token and primitive on one page, in both themes, so a
 // change to the system is judged here before it reaches a screen. Also the
-// directory of every route, for walking the app.
+// directory of every route, for walking the app. A Server Component, with
+// the two stateful demos as client leaves in demos.tsx.
 
 const swatches: { token: string; cls: string; use: string }[] = [
   { token: "--page", cls: "bg-page", use: "Page background" },
@@ -25,10 +22,12 @@ const swatches: { token: string; cls: string; use: string }[] = [
   { token: "--tint", cls: "bg-tint", use: "Featured content cards only" },
   { token: "--action", cls: "bg-action", use: "Primary pill" },
   { token: "--action-pressed", cls: "bg-action-pressed", use: "Primary pill pressed" },
+  { token: "--on-action", cls: "bg-on-action", use: "Label on the primary pill" },
+  { token: "--focus", cls: "bg-focus", use: "The focus ring" },
   { token: "--text", cls: "bg-text", use: "Primary text, icons, links" },
   { token: "--text-2", cls: "bg-text-2", use: "Secondary text" },
   { token: "--text-3", cls: "bg-text-3", use: "Placeholder only" },
-  { token: "--error", cls: "bg-error", use: "Field ring and helper text only" },
+  { token: "--error", cls: "bg-error", use: "Field ring, helper text and the danger pill's label. Never a fill" },
 ];
 
 function Section({ title, children, note }: { title: string; children: React.ReactNode; note?: string }) {
@@ -44,9 +43,6 @@ function Section({ title, children, note }: { title: string; children: React.Rea
 }
 
 export function DesignSheet() {
-  const [role, setRole] = useState("member");
-  const [confirmOpen, setConfirmOpen] = useState(false);
-  const [failOpen, setFailOpen] = useState(false);
   return (
     <main className="mx-auto w-full max-w-5xl px-5 py-10 md:px-8">
       <header className="mb-10 flex flex-wrap items-center justify-between gap-4">
@@ -64,7 +60,7 @@ export function DesignSheet() {
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4">
             {swatches.map((s) => (
               <li key={s.token} className="flex flex-col gap-2">
-                <div className={`h-16 rounded-guide ${s.cls} ${s.cls === "bg-page" || s.cls === "bg-sheet" || s.cls === "bg-field" ? "ring-1 ring-divider ring-inset" : ""}`} />
+                <div className={`h-16 rounded-guide ${s.cls} ${["bg-page", "bg-sheet", "bg-field", "bg-on-action"].includes(s.cls) ? "ring-1 ring-divider ring-inset" : ""}`} />
                 <div>
                   <p className="text-label font-medium">{s.token}</p>
                   <p className="text-label text-text-2">{s.use}</p>
@@ -90,41 +86,13 @@ export function DesignSheet() {
           title="Modals"
           note="A modal that asks a question owns the work. The pill spins in place, the modal holds while the server works, and it closes only once the work resolves. Try the failing one."
         >
-          <Card className="flex flex-wrap items-center gap-3 p-6">
-            <Pill size="sm" onClick={() => setConfirmOpen(true)}>
-              Confirm that succeeds
-            </Pill>
-            <Pill size="sm" variant="danger" onClick={() => setFailOpen(true)}>
-              Confirm that fails
-            </Pill>
-          </Card>
-          <ConfirmModal
-            open={confirmOpen}
-            onOpenChange={setConfirmOpen}
-            title="Send the invitation?"
-            description="They get an email with a link that expires in seven days."
-            confirmLabel="Send invitation"
-            pendingLabel="Sending"
-            onConfirm={async () => {
-              await new Promise((resolve) => setTimeout(resolve, 1200));
-            }}
-          />
-          <ConfirmModal
-            open={failOpen}
-            onOpenChange={setFailOpen}
-            title="Delete this note?"
-            description="This cannot be undone."
-            confirmLabel="Delete note"
-            pendingLabel="Deleting"
-            destructive
-            onConfirm={async () => {
-              await new Promise((resolve) => setTimeout(resolve, 1200));
-              return "The note was already deleted by someone else.";
-            }}
-          />
+          <ModalDemo />
         </Section>
 
-        <Section title="Pills" note="52 px on phone, 48 px on a desk. Primary, secondary, text. Loading is a spinner inside the pill.">
+        <Section
+          title="Pills"
+          note="52 px on phone, 48 px on a desk. Primary, secondary, text and danger. Loading is a spinner inside the pill, in full colour. The small sizes look small and still take a 44 px tap."
+        >
           <Card className="flex flex-col gap-6 p-6">
             <div className="flex flex-wrap items-center gap-3">
               <Pill>Sign in</Pill>
@@ -161,8 +129,8 @@ export function DesignSheet() {
               <InputField label="Organisation address" prefix="app.example.com/" defaultValue="acme" helper="The link you share with your team." />
               <SelectField
                 label="Role"
-                value={role}
-                onChange={setRole}
+                name="role"
+                defaultValue="member"
                 options={[
                   { value: "owner", label: "Owner" },
                   { value: "member", label: "Member" },
@@ -185,10 +153,7 @@ export function DesignSheet() {
               <GuideCard name="Sam Reyes" initials="SR">
                 I&apos;ve added you as a member. You can read and write notes, and invite the rest of the team.
               </GuideCard>
-              <div className="flex flex-col gap-2">
-                <Row tone="field" title="Acme Studio" secondary="Owner" trailing={<ChevronRight className="size-5 text-text-2" strokeWidth={1.5} />} onClick={() => {}} />
-                <Row tone="field" title="Northwind Traders" secondary="Member" trailing={<ChevronRight className="size-5 text-text-2" strokeWidth={1.5} />} onClick={() => {}} />
-              </div>
+              <RowDemo />
             </Sheet>
             <div className="flex flex-col gap-3">
               <Card className="p-5">
@@ -209,7 +174,7 @@ export function DesignSheet() {
           </div>
         </Section>
 
-        <Section title="Every route" note="From docs/design/pages.md. A route missing here is a route nobody walks.">
+        <Section title="Every route" note="From src/content/routes.ts, which docs/design/pages.md mirrors. A route missing here is a route nobody walks.">
           <div className="grid gap-4 md:grid-cols-2">
             {routeGroups.map((g) => (
               <Card key={g.title} className="p-5">
