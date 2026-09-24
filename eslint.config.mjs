@@ -11,7 +11,8 @@ import nextTs from "eslint-config-next/typescript";
 // 2. Only src/lib/time imports date-fns. Every other file uses its helpers,
 //    so timezone handling stays in one place.
 // 3. Only src/components/primitives opens a dialog. Product code uses Modal
-//    and ConfirmModal, which keep the modal open until the work resolves.
+//    and ConfirmModal, which keep the modal open until the work resolves,
+//    and Drawer for the phone sidebar.
 //    Reach for the raw dialog and it is possible to close on click and leave
 //    the person guessing whether anything happened.
 
@@ -28,9 +29,17 @@ const restrictRawDatabase = {
   ],
 };
 
+// The shadcn sheet is a dialog too, and radix-ui exports the raw ones. The
+// drawer primitive is the sanctioned way to the sheet.
 const restrictRawDialog = {
-  paths: [{ name: "@/components/ui/dialog", message: rawDialogMessage }],
-  patterns: [{ group: ["**/ui/dialog", "*/ui/dialog", "../ui/dialog", "./dialog"], message: rawDialogMessage }],
+  paths: [
+    { name: "@/components/ui/dialog", message: rawDialogMessage },
+    { name: "@/components/ui/sheet", message: rawDialogMessage + " For a panel from the edge, use Drawer from @/components/primitives/drawer." },
+    { name: "radix-ui", importNames: ["Dialog", "AlertDialog"], message: rawDialogMessage },
+  ],
+  patterns: [
+    { group: ["**/ui/dialog", "*/ui/dialog", "../ui/dialog", "./dialog", "**/ui/sheet", "*/ui/sheet", "../ui/sheet"], message: rawDialogMessage },
+  ],
 };
 
 const restrictRawDates = {

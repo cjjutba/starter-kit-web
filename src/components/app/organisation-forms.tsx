@@ -10,8 +10,13 @@ import {
   updateOrganisation,
   type OrganisationFormState,
 } from "@/app/app/settings/actions";
+import { roleOptions } from "@/lib/auth/roles";
 
 const initial: OrganisationFormState = {};
+
+function zoneOptions(timezones: string[]) {
+  return timezones.map((zone) => ({ value: zone, label: zone }));
+}
 
 // React resets an uncontrolled field to its default once a form action
 // completes, and at that moment the default is still the old value. Keying
@@ -27,7 +32,7 @@ export function OrganisationDetailsForm({ name, timezone, timezones }: { name: s
         label="Timezone"
         name="timezone"
         defaultValue={timezone}
-        options={timezones.map((zone) => ({ value: zone, label: zone }))}
+        options={zoneOptions(timezones)}
         helper="Every time shown to this organisation uses it."
         error={state.fieldErrors?.timezone}
       />
@@ -43,11 +48,7 @@ export function OrganisationDetailsForm({ name, timezone, timezones }: { name: s
 
 export function InviteForm({ canInviteOwner }: { canInviteOwner: boolean }) {
   const [state, action, pending] = useActionState(inviteMember, initial);
-  const roles = [
-    { value: "member", label: "Member" },
-    { value: "admin", label: "Admin" },
-    ...(canInviteOwner ? [{ value: "owner", label: "Owner" }] : []),
-  ];
+  const roles = roleOptions(canInviteOwner);
   return (
     <form action={action} className="flex flex-col gap-5">
       <InputField label="Email" name="email" type="email" required error={state.fieldErrors?.email} />
@@ -72,7 +73,7 @@ export function CreateOrganisationForm({ timezone, timezones }: { timezone: stri
         name="timezone"
         on="page"
         defaultValue={timezone}
-        options={timezones.map((zone) => ({ value: zone, label: zone }))}
+        options={zoneOptions(timezones)}
         helper="Every time shown to this organisation uses it. You can change it later."
         error={state.fieldErrors?.timezone}
       />

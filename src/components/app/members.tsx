@@ -7,6 +7,7 @@ import { controlClass, InputField } from "@/components/primitives/field";
 import { ConfirmModal } from "@/components/primitives/modal";
 import { Pill } from "@/components/primitives/pill";
 import { Row } from "@/components/primitives/surfaces";
+import { isOwner, roleLabel, roleOptions } from "@/lib/auth/roles";
 import {
   cancelInvitation,
   deleteOrganisation,
@@ -29,10 +30,6 @@ export interface MemberItem {
   role: string;
 }
 
-function isOwner(role: string): boolean {
-  return role.split(",").includes("owner");
-}
-
 export function MemberRow({
   member,
   isSelf,
@@ -49,11 +46,7 @@ export function MemberRow({
   // An admin cannot touch an owner. Better Auth refuses it, so the controls
   // are not shown either.
   const editable = canManage && !isSelf && (viewerIsOwner || !isOwner(member.role));
-  const roles = [
-    { value: "member", label: "Member" },
-    { value: "admin", label: "Admin" },
-    ...(viewerIsOwner ? [{ value: "owner", label: "Owner" }] : []),
-  ];
+  const roles = roleOptions(viewerIsOwner);
 
   return (
     <div className="flex flex-col gap-2">
@@ -73,7 +66,7 @@ export function MemberRow({
                   defaultValue={member.role}
                   aria-label={`Role for ${member.name}`}
                   // The row is field toned, so the control steps back to the sheet.
-                  className={controlClass("page", false, "h-10 w-auto appearance-none pr-8 text-small")}
+                  className={controlClass("page", false, "h-touch w-auto appearance-none pr-8 text-small")}
                 >
                   {roles.map((role) => (
                     <option key={role.value} value={role.value}>
@@ -90,7 +83,7 @@ export function MemberRow({
               </Pill>
             </div>
           ) : (
-            <span className="text-label text-text-2">{member.role}</span>
+            <span className="text-label text-text-2">{roleLabel(member.role)}</span>
           )
         }
       />
@@ -119,7 +112,7 @@ export function InvitationRow({ invitation, canManage }: { invitation: { id: str
       <Row
         tone="field"
         title={invitation.email}
-        secondary={`Invited as ${invitation.role ?? "member"}, not yet accepted`}
+        secondary={`Invited as ${roleLabel(invitation.role).toLowerCase()}, not yet accepted`}
         trailing={
           canManage ? (
             <form action={action}>
@@ -129,7 +122,7 @@ export function InvitationRow({ invitation, canManage }: { invitation: { id: str
               </Pill>
             </form>
           ) : (
-            <span className="text-label text-text-2">{invitation.role ?? "member"}</span>
+            <span className="text-label text-text-2">{roleLabel(invitation.role)}</span>
           )
         }
       />
@@ -143,7 +136,7 @@ export function LeaveOrganisation({ name }: { name: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Pill variant="danger" size="sm" onClick={() => setOpen(true)}>
+      <Pill variant="danger" size="sm" className="h-auto min-h-10 whitespace-normal py-2" onClick={() => setOpen(true)}>
         Leave {name}
       </Pill>
       <ConfirmModal
@@ -175,7 +168,7 @@ export function DeleteOrganisation({ name }: { name: string }) {
   }
   return (
     <>
-      <Pill variant="danger" size="sm" onClick={() => setOpen(true)}>
+      <Pill variant="danger" size="sm" className="h-auto min-h-10 whitespace-normal py-2" onClick={() => setOpen(true)}>
         Delete {name}
       </Pill>
       <ConfirmModal
