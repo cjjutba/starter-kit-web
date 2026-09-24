@@ -30,7 +30,7 @@ is on production and green, not when it merges.
 
 ## Open questions
 
-None yet. Each one names the skill or feature that needs it answered.
+None yet. Name the skill or feature that is blocked on each.
 
 ## Resume notes
 

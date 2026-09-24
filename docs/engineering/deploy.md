@@ -41,7 +41,6 @@ additive first and destructive later.
 
 ## Domains
 
-Add the domain in the Vercel project, then set `BETTER_AUTH_URL` and
-`NEXT_PUBLIC_APP_URL` to it in production. Auth cookies are bound to the
-origin, so sessions from the old URL end. `launch.md` is the rest of the
-list a product runs before its first real person.
+`launch.md` step 1 moves production to a domain, and the rest of that
+file is the list a product runs before its first real person. Auth
+cookies are bound to the origin, so sessions from the old URL end.

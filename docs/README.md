@@ -48,9 +48,9 @@ instead of drifting.
 
 ## Keeping this honest
 
-`product/decisions.md` is append only. When a decision changes, add a new
-entry that supersedes the old one rather than editing history. A decision
-log that gets rewritten is a decision log nobody trusts.
+`product/decisions.md` is append only, and its header says how to
+supersede an entry. A decision log that gets rewritten is one nobody
+trusts.
 
 Everything else in this folder describes the product as intended. When the
 build teaches you something different, change the document. A plan that

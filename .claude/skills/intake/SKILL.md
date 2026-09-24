@@ -25,8 +25,8 @@ carry on. Do not run it.
 ## 2. Paste
 
 Copy the brief into `docs/product/intake.md` under "The brief", whole and
-as sent, with the date. An amendment goes under its own dated heading,
-and the later one wins where they conflict. A brief that came as an
+as sent, with the date. An amendment goes where the file's own prompt
+says. A brief that came as an
 attachment is copied out of `.context/`, because that folder is not in
 the repository and the intake is.
 

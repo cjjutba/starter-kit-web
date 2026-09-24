@@ -21,10 +21,9 @@ and every answer given so far.
 Then go through the order below and, for each file, list what the intake
 settles and what it leaves open. Ask about the open ones in rounds of three
 to five questions. Restate what is settled as a table, so the person
-corrects rather than repeats. A gap is a question, not a decision, however
-obvious the default looks. **End the turn.** Writing starts when the person
-says the answers are complete, not before. Each answer goes into the intake
-as it is given.
+corrects rather than repeats. Never fill a gap with a default. **End the
+turn.** Writing starts when the person says the answers are complete,
+not before. Each answer goes into the intake as it is given.
 
 ## Order
 

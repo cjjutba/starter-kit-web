@@ -31,8 +31,8 @@ what is being built, what is next and what is still open.
 
 {{ONE_LINE}}
 
-`docs/product/brief.md` says who it is for and what has to be true. If that
-file is still a template, run `/plan` before building anything.
+If `docs/product/brief.md` is still a template, run `/plan` before
+building anything.
 
 **Audience order.** The person deciding whether to pay, then anyone
 evaluating the work. In that order, because a product built to impress
