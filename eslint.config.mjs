@@ -38,6 +38,8 @@ const restrictRawDates = {
     { name: "date-fns", message: rawDateMessage },
     { name: "@date-fns/tz", message: rawDateMessage },
   ],
+  // "date-fns/format" is the same library through a side door.
+  patterns: [{ group: ["date-fns/*", "@date-fns/*"], message: rawDateMessage }],
 };
 
 const dataLayer = ["src/lib/db/**", "src/lib/auth/**", "src/lib/mail/**", "src/lib/guard/**"];
@@ -54,7 +56,7 @@ const eslintConfig = defineConfig([
         "error",
         {
           paths: [...restrictRawDatabase.paths, ...restrictRawDates.paths, ...restrictRawDialog.paths],
-          patterns: [...restrictRawDatabase.patterns, ...restrictRawDialog.patterns],
+          patterns: [...restrictRawDatabase.patterns, ...restrictRawDates.patterns, ...restrictRawDialog.patterns],
         },
       ],
     },
@@ -64,7 +66,10 @@ const eslintConfig = defineConfig([
     // they are what everything else has to go through.
     files: ["src/components/primitives/**", "src/components/ui/**"],
     rules: {
-      "no-restricted-imports": ["error", { ...restrictRawDatabase, paths: [...restrictRawDatabase.paths, ...restrictRawDates.paths] }],
+      "no-restricted-imports": [
+        "error",
+        { paths: [...restrictRawDatabase.paths, ...restrictRawDates.paths], patterns: [...restrictRawDatabase.patterns, ...restrictRawDates.patterns] },
+      ],
     },
   },
   {
