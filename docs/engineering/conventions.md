@@ -1,6 +1,6 @@
 # Conventions
 
-Cap: 400 words. How code is written here. Anything a lint can check is in
+How code is written here. Anything a lint can check is in
 `eslint.config.mjs` or `tests/rules/` instead of this file.
 
 ## Files

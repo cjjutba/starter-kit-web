@@ -1,6 +1,6 @@
 # Pages
 
-Cap: 600 words. Every page by surface, with its route and who can reach it. `src/content/routes.ts` is the machine readable version and the two must agree.
+Every page by surface, with its route and who can reach it. `src/content/routes.ts` is the machine readable version and the two must agree.
 
 ## Marketing and legal
 

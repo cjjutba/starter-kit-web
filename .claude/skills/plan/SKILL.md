@@ -1,14 +1,13 @@
 ---
 name: plan
-description: Fills the product docs in order, in conversation, within each file's word cap, and ends with a feature list where every feature has a "done means" line and a review depth. Use before building feature one, or when docs/product/brief.md is still a template. Refuses to start a feature until the docs exist.
+description: Fills the product docs in order, in conversation, and ends with a feature list where every feature has a "done means" line and a review depth. Use before building feature one, or when docs/product/brief.md is still a template. Refuses to start a feature until the docs exist.
 ---
 
 # plan
 
 The step agents skip. A feature built without a brief is a feature nobody
-asked for. This runs before `/feature F1` and every doc it writes has a cap,
-because length is not detail. The cap is a test now, so an overrun fails
-the build rather than the reader.
+asked for. This runs before `/feature F1`. The docs have no word limit,
+and compact is still the rule: `docs/README.md` says how.
 
 Apply the `unslop` skill to every line written. No dashes as punctuation.
 
@@ -42,11 +41,11 @@ as it is given.
 11. `docs/design/screens.md`, because the workflow designs the screen before it breaks into features
 12. `docs/design/direction.md`, if the product changes the template's taste. The four knobs, accent, ground, shape and typeface, follow "Making it yours" in `DESIGN.md`, and the tests decide whether the result holds.
 
-One file at a time. Read the file. It has a cap on its first line and a
+One file at a time. Read the file. It has a purpose line at the top and a
 prompt under each heading. Write each section from the intake and the
 answers. A section the intake still cannot fill is a question, asked in
-conversation, not a default. Read the whole file back and count words. Over
-the cap means cut, not exceed.
+conversation, not a default. Read the whole file back and cut anything
+another doc already says. Link to it instead.
 
 ## Rules
 
@@ -58,7 +57,7 @@ the cap means cut, not exceed.
 
 ## Ends when
 
-Every file in the order is written within its cap, the feature list has
+Every file in the order is written, the feature list has
 its "done means" lines, every feature is in the table in
 `docs/progress.md` as planned with Next set to `/feature F1`, `routes.ts`
 matches `pages.md`, and `pnpm test` is green. Say so, list the features with their depth, and stop. `/feature F1`

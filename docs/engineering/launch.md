@@ -1,6 +1,6 @@
 # Launch
 
-Cap: 300 words. The list a product runs once, at the checkpoint feature,
+The list a product runs once, at the checkpoint feature,
 before a real person is sent to it. Setup leaves every item here on
 purpose, because each needs something only the product has.
 

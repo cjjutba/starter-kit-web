@@ -1,6 +1,6 @@
 # States
 
-Cap: 300 words. Every screen passes this list before it is done. Generated mockups never show these, which is why real products fail at them.
+Every screen passes this list before it is done. Generated mockups never show these, which is why real products fail at them.
 
 ## The five
 

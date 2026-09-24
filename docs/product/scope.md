@@ -1,6 +1,6 @@
 # Scope
 
-Cap: 300 words. Three lists. Short items.
+Three lists. Short items.
 
 ## In v1
 

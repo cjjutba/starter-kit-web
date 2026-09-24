@@ -1,9 +1,8 @@
 # Intake
 
-No cap. This is the one product doc without one, because it holds the
-brief as it was pasted and every question and answer that followed, and
-cutting either loses context. `/plan` condenses it into the capped docs.
-Append only. When an answer changes, add the new one under the old with
+The brief as it was pasted and every question and answer that followed,
+kept whole because cutting either loses context. `/plan` condenses it into
+the other product docs. Append only. When an answer changes, add the new one under the old with
 the date, so the reasoning survives.
 
 ## The brief

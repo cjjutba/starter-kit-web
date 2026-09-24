@@ -1,6 +1,6 @@
 # Users
 
-Cap: 300 words. One short block per role. `roles.md` says what each can do; this says who they are.
+One short block per role. `roles.md` says what each can do; this says who they are.
 
 ## The person who pays
 

@@ -1,6 +1,6 @@
 # Tooling
 
-Cap: 300 words. What each skill expects to find, and what to do when it is
+What each skill expects to find, and what to do when it is
 missing.
 
 ## MCP servers

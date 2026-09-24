@@ -45,8 +45,8 @@ skill runs instead. It copies the brief into `product/intake.md`, writes
 what the brief settles, implies and conflicts with the kit on, and asks
 in rounds of three to five until the person says nothing is open. A gap
 is a question, not a decision, however obvious the default looks. Then
-it tells the person to type `/setup`. The intake has no cap. It is what
-`/plan` condenses.
+it tells the person to type `/setup`. The intake keeps everything whole.
+It is what `/plan` condenses.
 
 Each skill then has the same shape. Ask, end the turn, act after a yes in
 the conversation. `setup` restates what it will wire and waits. `plan`

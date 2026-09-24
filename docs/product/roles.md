@@ -1,6 +1,6 @@
 # Roles
 
-Cap: 300 words. One block per role, mapped to the Better Auth roles owner, admin and member. Say what each can do in verbs.
+One block per role, mapped to the Better Auth roles owner, admin and member. Say what each can do in verbs.
 
 ## Owner
 

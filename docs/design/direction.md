@@ -1,6 +1,6 @@
 # Visual direction
 
-Cap: 500 words. How the look was decided, what was tried, and what it cost. `DESIGN.md` records the result as numbers. This records the reasoning.
+How the look was decided, what was tried, and what it cost. `DESIGN.md` records the result as numbers. This records the reasoning.
 
 ## What was decided
 

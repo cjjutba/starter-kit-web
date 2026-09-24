@@ -1,6 +1,6 @@
 # Environments
 
-Cap: 300 words. Three environments, one env file each.
+Three environments, one env file each.
 
 | Variable | Local | Preview | Production |
 | --- | --- | --- | --- |

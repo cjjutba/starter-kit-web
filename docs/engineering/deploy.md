@@ -1,6 +1,6 @@
 # Deploy
 
-Cap: 300 words. A push deploys. Nothing else does.
+A push deploys. Nothing else does.
 
 ## How it flows
 

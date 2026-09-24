@@ -1,6 +1,6 @@
 # Testing
 
-Cap: 300 words. Three layers, each with a job.
+Three layers, each with a job.
 
 ## Rules, in `tests/rules/`
 
@@ -17,7 +17,6 @@ written twice. Each fails on:
 - `env`: a variable the code reads that `.env.example` does not list.
 - `routes`: a page, the route directory and `pages.md` disagreeing.
 - `guards`: an app action without the session check, a public action without honeypot and rate limit, a job without `CRON_SECRET`.
-- `word-caps`: a capped doc over its cap.
 
 CI also fails a pull request whose commit messages carry a dash.
 

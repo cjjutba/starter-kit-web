@@ -1,6 +1,6 @@
 # Data
 
-Cap: 500 words. The data layer and the rules around it.
+The data layer and the rules around it.
 
 ## Files
 

@@ -1,6 +1,6 @@
 # Auth
 
-Cap: 400 words. Better Auth as configured here, and the hooks that keep
+Better Auth as configured here, and the hooks that keep
 tenancy true.
 
 ## Files

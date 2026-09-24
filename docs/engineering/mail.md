@@ -1,6 +1,6 @@
 # Mail
 
-Cap: 200 words. One entry point, two providers, one log.
+One entry point, two providers, one log.
 
 `send()` in `src/lib/mail/index.ts` is the only way a message leaves.
 `MAIL_PROVIDER` picks the provider. `log`, the default everywhere but

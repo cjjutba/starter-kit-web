@@ -8,8 +8,7 @@ import { describe, expect, it } from "vitest";
 // one without its row in the explorations index is one the next session
 // re-runs, and one missing a section is one that stopped looking. Each of
 // those is a rule in the skill, and a rule that only a skill reads is a rule
-// the next session skips, so the build reads them too. There is no word cap
-// on a reference on purpose.
+// the next session skips, so the build reads them too.
 
 const root = join("docs", "design", "explorations");
 const index = readFileSync(join(root, "README.md"), "utf8");

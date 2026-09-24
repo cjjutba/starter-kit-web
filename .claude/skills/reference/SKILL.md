@@ -17,8 +17,8 @@ mark are theirs, and nothing here saves any of it. The screenshots are a
 record of what was looked at, never assets. The reference is an
 independent reading of what the page renders and says so.
 
-There is no word cap. The reference is the whole system as observed, and
-a short one is a reference that stopped looking.
+The reference is the whole system as observed, and a short one is a
+reference that stopped looking.
 
 ## 1. Context, then end the turn
 

@@ -100,7 +100,7 @@ it touches. Do not run it.
 
 ## What this is not
 
-Not the brief. `/plan` writes that, under its cap, from this file. Not a
+Not the brief. `/plan` writes that from this file. Not a
 decision log. An answer here becomes an entry in
 `docs/product/decisions.md` when `/setup` or `/plan` acts on it. Not a
 form. Forty questions in one message get forty answers of one word.

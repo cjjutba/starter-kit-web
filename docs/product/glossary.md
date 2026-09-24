@@ -1,6 +1,6 @@
 # Glossary
 
-No cap. One row per concept. The code column is the word used in tables, types and routes, and it does not change once something ships.
+One row per concept. The code column is the word used in tables, types and routes, and it does not change once something ships.
 
 | Term | Meaning | In code |
 | --- | --- | --- |

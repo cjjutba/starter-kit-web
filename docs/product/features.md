@@ -1,6 +1,6 @@
 # Features
 
-Cap: 800 words. Numbered, in build order. Every feature has a "done means" line that a stranger could check, and a review depth. Mark the checkpoint.
+Numbered, in build order. Every feature has a "done means" line that a stranger could check, and a review depth. Mark the checkpoint.
 
 ## F0 Foundation
 

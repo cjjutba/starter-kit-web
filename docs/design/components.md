@@ -1,6 +1,6 @@
 # Components
 
-Cap: 400 words. What exists, when to use which, and what to reach for when nothing fits.
+What exists, when to use which, and what to reach for when nothing fits.
 
 ## Primitives, in `src/components/primitives/`
 
