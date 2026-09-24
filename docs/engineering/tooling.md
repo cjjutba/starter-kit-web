@@ -1,6 +1,6 @@
 # Tooling
 
-Cap: 300 words. What each skill expects to find, and what to do when it is
+What each skill expects to find, and what to do when it is
 missing.
 
 ## MCP servers
@@ -24,15 +24,29 @@ not an MCP.
 ## Local requirements
 
 Node 22 or later, and `.node-version` says 24 so Vercel and CI match. The
-Better Auth CLI fails on Node 20. pnpm 8, pinned in `package.json`. The
+Better Auth CLI fails on Node 20. pnpm through the `packageManager` field
+in `package.json`. The
 `gh`, `vercel` and `openssl` CLIs signed in.
 
 ## Skills in this repo
 
-`.claude/skills/` holds `intake`, `setup`, `plan`, `feature`, `verify` and `image`.
-They travel with the repo, so every project made from the template has
-them. `skills-lock.json` lists the Neon skills that reinstall from their
+The skills in `.claude/skills/`, listed in `AGENTS.md`, travel with the
+repo, so every project made from the template has them. `skills-lock.json` lists the Neon skills that reinstall from their
 own repository rather than being vendored.
+
+## Skills from outside the repo
+
+The skills here call four that live at user scope, not in the repo.
+
+| Skill | Called by | When it is missing |
+| --- | --- | --- |
+| `unslop` | every skill, for anything written | Apply the writing rules in `AGENTS.md` rule 7 by hand |
+| `interrogate` | `feature`, deep review | `/code-review` at high effort |
+| `interface-design:design-review` | `feature`, deep review | `impeccable`, or a manual pass against `DESIGN.md` and `design/states.md` |
+| `impeccable` | `feature`, normal review | A manual pass against `DESIGN.md` and `design/states.md` |
+
+Say which fallback ran in the review notes, so a missing skill is visible
+rather than silently skipped.
 
 ## Error reports
 
@@ -43,4 +57,6 @@ reports.
 ## Permissions
 
 `.claude/settings.json` allows the commands the skills run: pnpm, node,
-git except the destructive commands, `gh`, `vercel` and `openssl rand`.
+`git status`, `diff`, `log`, `add`, `commit`, `push` and `switch`, `gh`,
+`vercel` and `openssl rand`. Nothing that discards work is on the list, so
+a reset, a checkout of a file or a force push still asks.

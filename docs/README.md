@@ -1,9 +1,15 @@
 # docs
 
-## Read in this order
+## What each file answers
+
+Not a reading order. `AGENTS.md` "Start here" says which of these a task
+needs. `/plan` fills the product and design docs in the order its skill
+lists.
 
 | File | What it answers |
 | --- | --- |
+| [`progress.md`](progress.md) | Where the build stands, what is next and what is open. Read first |
+| [`specs/`](specs/README.md) | One spec per feature, and the template they follow |
 | [`product/intake.md`](product/intake.md) | The brief as it was pasted, and every question and answer before a doc was written |
 | [`product/brief.md`](product/brief.md) | What this is, who it is for, and what has to be true about it |
 | [`product/users.md`](product/users.md) | The people who use it, by role, and what each must never see |
@@ -35,18 +41,21 @@ The two files above this folder matter more than any of them.
 
 ## How the templates work
 
-Every product and design doc but `product/intake.md` opens with a word cap
-and has one line under each heading saying what belongs there. The intake
-has no cap because it holds the brief and the answers whole. `/plan` asks
-first, then fills the rest in order and refuses to pass the cap. Length is
-not detail. A brief that needs more than its cap is a brief that is not
-settled.
+Every product and design doc opens with a line saying what it is for and
+has one line under each heading saying what belongs there. `/plan` asks
+first, then fills them in order from `product/intake.md`.
+
+There is no word limit. A doc is as long as it needs to be complete, and
+no longer. Every fact lives in one file, and other files link to it
+rather than restating it. `tests/rules/no-repeats.test.ts` fails the
+build when a sentence appears in two places, so a copy gets caught
+instead of drifting.
 
 ## Keeping this honest
 
-`product/decisions.md` is append only. When a decision changes, add a new
-entry that supersedes the old one rather than editing history. A decision
-log that gets rewritten is a decision log nobody trusts.
+`product/decisions.md` is append only, and its header says how to
+supersede an entry. A decision log that gets rewritten is one nobody
+trusts.
 
 Everything else in this folder describes the product as intended. When the
 build teaches you something different, change the document. A plan that

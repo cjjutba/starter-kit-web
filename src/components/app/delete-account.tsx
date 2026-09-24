@@ -6,6 +6,7 @@ import { InputField } from "@/components/primitives/field";
 import { ConfirmModal } from "@/components/primitives/modal";
 import { Pill } from "@/components/primitives/pill";
 import { authClient } from "@/lib/auth/client";
+import { appCopy } from "@/content/app";
 
 // The one destructive thing on the account page. The modal asks for the
 // password, spins in place while the server works, and stays open with the
@@ -33,7 +34,7 @@ export function DeleteAccount() {
         open={open}
         onOpenChange={change}
         title="Delete your account?"
-        description="Your personal organisation and everything in it go with it. Notes you wrote in shared organisations stay, without your name. This cannot be undone."
+        description={appCopy.account.deleteConfirm}
         confirmLabel="Delete account"
         pendingLabel="Deleting"
         destructive

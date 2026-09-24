@@ -1,6 +1,6 @@
 # Copy
 
-Cap: 400 words. How the interface talks. The `unslop` rules apply here too.
+How the interface talks. The `unslop` rules apply here too.
 
 ## Voice
 

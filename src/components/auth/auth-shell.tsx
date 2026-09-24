@@ -4,8 +4,8 @@ import { Sheet } from "@/components/primitives/surfaces";
 import { product } from "@/config";
 
 // The frame every auth page shares. A sheet on the page, the product name
-// above it. Kalinga puts a photograph behind this. A product with one adds
-// it here and nowhere else.
+// above it. A product that wants a photograph behind the sheet adds it here
+// and nowhere else.
 
 export function AuthShell({ title, lead, children }: { title: string; lead?: string; children: ReactNode }) {
   return (

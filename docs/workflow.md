@@ -18,7 +18,7 @@ Plan and describe  ->  Design the screen  ->  Break into features
         |                                    Verify skill passes
         |                                             |
         |                                             v
-        |                                      AI code review
+        |                                  Code and design review
         |                                             |
         |                                             v
    more features                                  Fix issues
@@ -45,8 +45,8 @@ skill runs instead. It copies the brief into `product/intake.md`, writes
 what the brief settles, implies and conflicts with the kit on, and asks
 in rounds of three to five until the person says nothing is open. A gap
 is a question, not a decision, however obvious the default looks. Then
-it tells the person to type `/setup`. The intake has no cap. It is what
-`/plan` condenses.
+it tells the person to type `/setup`. The intake keeps everything whole.
+It is what `/plan` condenses.
 
 Each skill then has the same shape. Ask, end the turn, act after a yes in
 the conversation. `setup` restates what it will wire and waits. `plan`
@@ -76,10 +76,11 @@ feature becomes noise you learn to skim, which is worse than not reviewing.
 write path, money, or scheduling. A deep pass looks for tenancy leaks,
 permission holes reachable by guessing a URL, abuse paths on public
 endpoints, and the edge cases the tests did not think of. Use the
-`interrogate` skill or `/code-review` at high effort.
+`interrogate` skill or `/code-review` at high effort, then
+`interface-design:design-review` on every changed screen.
 
 **Normal** on ordinary work over an already secured boundary. `/code-review`
-at the default effort.
+at the default effort, then `impeccable` on the changed screens.
 
 `product/features.md` names the depth for each feature.
 
@@ -104,8 +105,7 @@ the order.
 
 ## Saving progress
 
-Commit messages follow the writing rules in `../AGENTS.md`. No dashes as
-punctuation, no semicolons, and enough detail that the reasoning survives.
+Commit messages follow `engineering/conventions.md`.
 
 Add to `product/decisions.md` when something is decided. Take a screenshot
 into `design/screenshots/` when a screen changes. Both are much easier on
@@ -114,13 +114,14 @@ the day than reconstructed in a month.
 Design boards go in `design/explorations/` beside the prompt, model and
 price that produced them. The `image` skill does this by default.
 
-## Skills, and why there are six
+## Skills, and why they are separate
 
 `intake` runs when a brief arrives. `setup` runs once. `plan` runs before
 feature one. `feature` runs the loop. `verify` proves the app works.
-`image` makes boards and assets from the product's own context. Each runs
-at a different moment, which is why they are six and not one. Nothing
-else. None of them starts because a document
-says so, and none of them starts the next. Code review and adversarial review
+`image` makes boards and assets from the product's own context.
+`reference` reads a site someone admires into numbers. Each runs at a
+different moment, which is why they are separate and not one. None of
+them starts because a document says so, and none of them starts the
+next. Code review and adversarial review
 already exist as tools. Building custom versions of tools that already work
 is how a product turns into tooling.

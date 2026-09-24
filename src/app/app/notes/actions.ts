@@ -3,18 +3,17 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import type { FormState } from "@/components/forms/outcome";
 import { requireOrganisation } from "@/lib/auth/session";
 import { forOrganisation } from "@/lib/db/scoped";
+import { firstErrors, idSchema } from "@/lib/forms";
 
 // The pattern for every mutation: require the organisation, validate, then
 // call the scoped layer. The action never sees a database handle. Edit
 // carries the timestamp the form opened with, and a save that finds a
 // newer row says so instead of overwriting it.
 
-export interface NoteFormState {
-  error?: string;
-  fieldErrors?: { title?: string; body?: string };
-}
+export type NoteFormState = FormState;
 
 const noteSchema = z.object({
   title: z.string().trim().min(1, "Give the note a title.").max(120, "Keep the title under 120 characters."),
@@ -24,8 +23,7 @@ const noteSchema = z.object({
 function parse(formData: FormData) {
   const parsed = noteSchema.safeParse({ title: formData.get("title"), body: formData.get("body") ?? "" });
   if (parsed.success) return { data: parsed.data };
-  const flat = z.flattenError(parsed.error).fieldErrors;
-  return { fieldErrors: { title: flat.title?.[0], body: flat.body?.[0] } };
+  return { fieldErrors: firstErrors(parsed.error) };
 }
 
 export async function createNote(_previous: NoteFormState, formData: FormData): Promise<NoteFormState> {
@@ -61,7 +59,9 @@ export async function updateNote(_previous: NoteFormState, formData: FormData): 
 
 export async function deleteNote(id: string): Promise<{ error?: string }> {
   const { organisationId } = await requireOrganisation();
-  const removed = await forOrganisation(organisationId).notes.remove(id);
+  const parsed = idSchema.safeParse(id);
+  if (!parsed.success) return { error: "Reload the page and try again." };
+  const removed = await forOrganisation(organisationId).notes.remove(parsed.data);
   if (!removed) return { error: "The note was already deleted by someone else." };
   revalidatePath("/app");
   return {};

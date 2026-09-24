@@ -3,6 +3,7 @@ import { EmailForm, NameForm, PasswordForm } from "@/components/app/account-form
 import { DeleteAccount } from "@/components/app/delete-account";
 import { Card } from "@/components/primitives/surfaces";
 import { requireSession } from "@/lib/auth/session";
+import { appCopy } from "@/content/app";
 
 export const metadata: Metadata = { title: "Account" };
 
@@ -38,7 +39,7 @@ export default async function AccountPage() {
         <Card as="section" className="flex flex-col gap-4 p-5">
           <h2 className="text-heading font-medium">Delete account</h2>
           <p className="text-small text-text-2">
-            Removes you and your personal organisation. If you are the only owner of an organisation other people belong to, make someone else an owner first.
+            {appCopy.account.deleteLead}
           </p>
           <DeleteAccount />
         </Card>

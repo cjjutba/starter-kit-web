@@ -9,14 +9,11 @@ import { cn } from "@/lib/utils";
 // step of tone away from what it sits on. On a sheet it is --field, on the
 // page it is --sheet. Never a border. Errors are a red ring and one red line.
 
-// "auto" is for auth forms, which sit on a sheet below the laptop breakpoint
-// and directly on the page above it.
-type Surface = "sheet" | "page" | "auto";
+type Surface = "sheet" | "page";
 
 const surfaceFill: Record<Surface, string> = {
   sheet: "bg-field",
   page: "bg-sheet",
-  auto: "bg-field lg:bg-sheet",
 };
 
 interface FieldFrameProps {
@@ -92,7 +89,7 @@ export const InputField = forwardRef<HTMLInputElement, InputFieldProps>(function
       type={isPassword ? (reveal ? "text" : "password") : type}
       aria-invalid={error ? true : undefined}
       aria-describedby={describedBy}
-      className={cn(controlClass(on, !!error, "h-12"), prefix && "rounded-l-none pl-0", isPassword && "pr-12", className)}
+      className={cn(controlClass(on, !!error, "h-input"), prefix && "rounded-l-none pl-0", isPassword && "pr-12", className)}
       {...props}
     />
   );
@@ -219,7 +216,7 @@ export function SelectField({
           required={required}
           aria-invalid={error ? true : undefined}
           aria-describedby={error ? `${id}-error` : helper ? `${id}-helper` : undefined}
-          className={cn(controlClass(on, !!error, "h-12 appearance-none pr-10"))}
+          className={cn(controlClass(on, !!error, "h-input appearance-none pr-10"))}
           {...controlled}
         >
           {options.map((o) => (

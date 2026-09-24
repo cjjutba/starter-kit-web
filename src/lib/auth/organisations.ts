@@ -2,7 +2,7 @@ import { and, asc, eq, gt, inArray, sql } from "drizzle-orm";
 import { locale } from "../../config";
 import { db as defaultDb, type Database } from "../db/client";
 import { invitation, member, organization, session, user } from "../db/schema";
-import { slugify } from "../slug";
+import { uniqueSlug } from "../slug";
 
 // The helpers that keep every person inside an organisation they belong to.
 // The sign up hook creates the personal organisation. requireOrganisation()
@@ -22,27 +22,34 @@ export interface CurrentOrganisation {
   role: string;
 }
 
+/**
+ * Creates a personal organisation with this person as its owner, and returns
+ * the person's first organisation. One statement, so a failure cannot leave
+ * an organisation with no owner: the Neon HTTP driver has no transactions,
+ * and a CTE is atomic without one. It inserts nothing when the person
+ * already belongs somewhere, so two requests healing the same session at
+ * once settle on the same organisation.
+ */
 export async function createPersonalOrganisation(
   person: { id: string; name: string; email: string },
   db: Database = defaultDb,
 ): Promise<string> {
   const id = crypto.randomUUID();
-  const base = slugify(person.name || person.email.split("@")[0]) || "personal";
-  await db.insert(organization).values({
-    id,
-    name: person.name || "Personal",
-    slug: `${base}-${id.slice(0, 8)}`,
-    createdAt: new Date(),
-    timezone: locale.defaultTimezone,
-  });
-  await db.insert(member).values({
-    id: crypto.randomUUID(),
-    organizationId: id,
-    userId: person.id,
-    role: "owner",
-    createdAt: new Date(),
-  });
-  return id;
+  const name = person.name || "Personal";
+  const slug = uniqueSlug(person.name || person.email.split("@")[0], "personal", id);
+  await db.execute(sql`
+    with created as (
+      insert into ${organization} (id, name, slug, created_at, timezone)
+      select ${id}, ${name}, ${slug}, now(), ${locale.defaultTimezone}
+      where not exists (select 1 from ${member} where user_id = ${person.id})
+      returning id
+    )
+    insert into ${member} (id, organization_id, user_id, role, created_at)
+    select ${crypto.randomUUID()}, created.id, ${person.id}, 'owner', now() from created
+  `);
+  const first = await firstOrganisationFor(person.id, db);
+  if (!first) throw new Error("The personal organisation could not be created.");
+  return first;
 }
 
 export async function firstOrganisationFor(userId: string, db: Database = defaultDb): Promise<string | null> {

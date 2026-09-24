@@ -1,6 +1,6 @@
 # Deploy
 
-Cap: 300 words. A push deploys. Nothing else does.
+A push deploys. Nothing else does.
 
 ## How it flows
 
@@ -14,17 +14,16 @@ to a commit, and the push would build a second one anyway.
 
 ## First time
 
-`/setup` links the Vercel project, connects it to the GitHub repo with
-`vercel git connect`, and sets the environment variables for preview and
-production. Without the git connection the push deploys nothing.
+`/setup` links the Vercel project and sets the environment variables for
+preview and production. Linking connects the GitHub repo when the remote
+already exists, and `vercel git connect` confirms it. Without that
+connection the push deploys nothing.
 
 ## Migrations
 
 Before merging a PR that ships a migration, run `pnpm db:migrate` with
-`DATABASE_URL` pointing at the production branch. `data.md` has the order.
-The code that needs the change merges after the migration is applied,
-never before. Setup applies the baseline the same way before the first
-deploy, and `main` is never pushed to.
+`DATABASE_URL` pointing at the production branch. `data.md` owns the order
+and the rules.
 
 ## Crons
 
@@ -41,7 +40,6 @@ additive first and destructive later.
 
 ## Domains
 
-Add the domain in the Vercel project, then set `BETTER_AUTH_URL` and
-`NEXT_PUBLIC_APP_URL` to it in production. Auth cookies are bound to the
-origin, so sessions from the old URL end. `launch.md` is the rest of the
-list a product runs before its first real person.
+`launch.md` step 1 moves production to a domain, and the rest of that
+file is the list a product runs before its first real person. Auth
+cookies are bound to the origin, so sessions from the old URL end.

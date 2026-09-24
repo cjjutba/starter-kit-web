@@ -1,6 +1,6 @@
 # Metrics
 
-Cap: 200 words. The numbers a case study will need, recorded on the day rather than reconstructed in a month. Add a dated row when one changes.
+The numbers a case study will need, recorded on the day rather than reconstructed in a month. Add a dated row when one changes.
 
 | Number | Value | Date | Where it comes from |
 | --- | --- | --- | --- |

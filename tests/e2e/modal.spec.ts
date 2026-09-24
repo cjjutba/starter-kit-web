@@ -45,6 +45,8 @@ test.describe("a modal owns the work it starts", () => {
     await page.getByRole("button", { name: "Confirm that succeeds" }).click();
     const modal = page.getByRole("dialog");
     await modal.getByRole("button", { name: "Send invitation" }).click();
+    const busy = modal.getByRole("button", { name: "Sending" });
+    await expect(busy).toHaveAttribute("aria-busy", "true");
 
     // Escape during the work is ignored, so a half finished action cannot be
     // dismissed into silence.
@@ -54,6 +56,10 @@ test.describe("a modal owns the work it starts", () => {
     // The close button goes away rather than sitting there looking live while
     // it cannot close anything.
     await expect(modal.getByRole("button", { name: "Close" })).toHaveCount(0);
+
+    // Still busy, so the two checks above ran against the work in flight and
+    // not against a modal that had already closed, where they pass for free.
+    await expect(busy).toHaveAttribute("aria-busy", "true");
 
     await expect(modal).toBeHidden({ timeout: 5000 });
   });

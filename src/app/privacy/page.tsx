@@ -3,7 +3,7 @@ import Link from "next/link";
 import { Pill } from "@/components/primitives/pill";
 import { Card } from "@/components/primitives/surfaces";
 import { product } from "@/config";
-import { privacyNotice } from "@/content/privacy";
+import { deletionRequest, privacyNotice } from "@/content/privacy";
 import { formatLongDate } from "@/lib/time";
 
 export const metadata: Metadata = { title: privacyNotice.title };
@@ -31,7 +31,7 @@ export default function PrivacyPage() {
       </div>
       <div className="mt-8">
         <Pill asChild variant="secondary">
-          <Link href="/privacy/request">Ask for your data to be deleted</Link>
+          <Link href="/privacy/request">{deletionRequest.title}</Link>
         </Pill>
       </div>
     </main>

@@ -1,10 +1,13 @@
 "use server";
 
+import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
 import { z } from "zod";
+import type { FormState } from "@/components/forms/outcome";
 import { product } from "@/config";
 import { recordPrivacyRequest } from "@/lib/db/privacy-requests";
 import { clientIp, rateLimit } from "@/lib/guard/rate-limit";
+import { firstErrors } from "@/lib/forms";
 import { isBot } from "@/lib/guard/honeypot";
 import { send } from "@/lib/mail";
 import { deletionRequestMail } from "@/lib/mail/templates";
@@ -15,10 +18,8 @@ import { deletionRequestMail } from "@/lib/mail/templates";
 // is recorded before it is mailed, because the mail log is purged and a
 // contact address may not exist yet.
 
-export interface DeletionRequestState {
+export interface DeletionRequestState extends FormState {
   ok: boolean;
-  error?: string;
-  fieldErrors?: { email?: string; message?: string };
 }
 
 const schema = z.object({
@@ -40,13 +41,19 @@ export async function requestDeletion(_previous: DeletionRequestState, formData:
     message: formData.get("message") ?? "",
   });
   if (!parsed.success) {
-    const flat = z.flattenError(parsed.error).fieldErrors;
-    return { ok: false, fieldErrors: { email: flat.email?.[0], message: flat.message?.[0] } };
+    return { ok: false, fieldErrors: firstErrors(parsed.error) };
   }
 
   await recordPrivacyRequest(parsed.data);
   if (product.contactEmail) {
-    await send(deletionRequestMail({ to: product.contactEmail, ...parsed.data }));
+    // The request is recorded, which is what the person asked for. A mail
+    // failure here is ours to fix, not theirs to retry, so it is reported
+    // and the person still hears that it worked.
+    try {
+      await send(deletionRequestMail({ to: product.contactEmail, ...parsed.data }));
+    } catch (error) {
+      Sentry.captureException(error);
+    }
   }
   return { ok: true };
 }

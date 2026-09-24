@@ -1,6 +1,6 @@
 # Layouts
 
-Cap: 300 words. The breakpoints and the two shells, as numbers.
+The breakpoints and the two shells, as numbers.
 
 ## Breakpoints
 

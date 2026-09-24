@@ -34,6 +34,8 @@ export default defineConfig({
     : { command: `pnpm start --port ${port}`, url: baseURL, reuseExistingServer: !process.env.CI, timeout: 60_000 },
   projects: [
     { name: "light", use: { browserName: "chromium", colorScheme: "light" } },
-    { name: "dark", use: { browserName: "chromium", colorScheme: "dark" } },
+    // Only axe depends on the scheme. The modal and header specs prove the
+    // same thing in either, so they run once.
+    { name: "dark", use: { browserName: "chromium", colorScheme: "dark" }, testMatch: /axe\.spec\.ts/ },
   ],
 });

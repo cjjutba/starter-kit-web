@@ -7,6 +7,7 @@ import * as schema from "@/lib/db/schema";
 import {
   anyUserExists,
   clearActiveOrganisation,
+  createPersonalOrganisation,
   deleteOrganisationsOnlyMemberOf,
   organisationForMember,
   organisationsOnlyOwnedBy,
@@ -108,5 +109,21 @@ describe("membership", () => {
     expect(await deleteOrganisationsOnlyMemberOf(ana.id, db)).toBe(1);
     const left = await db.select({ id: schema.organization.id }).from(schema.organization);
     expect(left.map((row) => row.id).sort()).toEqual([orgA.id, orgB.id]);
+  });
+});
+
+describe("personal organisation", () => {
+  it("creates one with its owner in a single statement, and never a second", async () => {
+    const cy = { id: "user-c", name: "Cy Renée", email: "cy@example.com", createdAt: now, updatedAt: now };
+    await db.insert(schema.user).values(cy);
+
+    const first = await createPersonalOrganisation(cy, db);
+    const owned = await organisationForMember(cy.id, first, db);
+    expect(owned).toMatchObject({ name: "Cy Renée", role: "owner" });
+    expect(owned?.slug).toMatch(/^cy-renee-[0-9a-f]{8}$/);
+
+    expect(await createPersonalOrganisation(cy, db), "a person who already belongs somewhere keeps it").toBe(first);
+    const memberships = await db.select().from(schema.member).where(eq(schema.member.userId, cy.id));
+    expect(memberships).toHaveLength(1);
   });
 });

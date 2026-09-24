@@ -5,6 +5,7 @@ import { InviteForm } from "@/components/app/organisation-forms";
 import { SettingsHeader } from "@/components/app/settings-header";
 import { Card } from "@/components/primitives/surfaces";
 import { auth } from "@/lib/auth/server";
+import { canManage as manages, isOwner } from "@/lib/auth/roles";
 import { requireOrganisation } from "@/lib/auth/session";
 
 export const metadata: Metadata = { title: "People" };
@@ -12,17 +13,13 @@ export const metadata: Metadata = { title: "People" };
 // Who belongs to the organisation and who is on the way in. Owners and
 // admins invite, change roles and remove. Members read.
 
-function hasRole(role: string, wanted: string): boolean {
-  return role.split(",").includes(wanted);
-}
-
 export default async function PeoplePage() {
   const { session, organisationId, organisation } = await requireOrganisation();
   const full = await auth.api.getFullOrganization({ query: { organizationId: organisationId }, headers: await headers() });
   const members = full?.members ?? [];
   const pending = (full?.invitations ?? []).filter((invitation) => invitation.status === "pending");
-  const viewerIsOwner = hasRole(organisation.role, "owner");
-  const canManage = viewerIsOwner || hasRole(organisation.role, "admin");
+  const viewerIsOwner = isOwner(organisation.role);
+  const canManage = manages(organisation.role);
 
   return (
     <div className="flex flex-col gap-6">
@@ -37,6 +34,7 @@ export default async function PeoplePage() {
 
       <Card as="section" className="flex flex-col gap-4 p-5">
         <h2 className="text-heading font-medium">People</h2>
+        {full ? null : <p className="text-body text-text-2">The list of people could not load. Reload the page to try again.</p>}
         <ul className="flex flex-col gap-2">
           {members.map((item) => (
             <li key={item.id}>

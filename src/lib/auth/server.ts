@@ -38,19 +38,28 @@ import {
 // Relative imports on purpose. The Better Auth CLI loads this file without
 // the tsconfig path alias.
 
-// Production sets this to its origin. Previews leave it unset and are
-// matched by the Vercel wildcard below. Locally it is the dev server.
+// Production sets this to its origin. Previews leave it unset and sign in
+// on their own addresses, which Vercel passes in at runtime: the unique
+// deployment host and the branch alias. Locally it is the dev server.
 const productionOrigin = process.env.BETTER_AUTH_URL;
+
+// Every allowed host is also a trusted origin for callback and redirect
+// checks, so the list names this project's own hosts and never a wildcard.
+// "*.vercel.app" would trust every site anyone deploys on Vercel.
+const vercelHosts = [process.env.VERCEL_URL, process.env.VERCEL_BRANCH_URL, process.env.VERCEL_PROJECT_PRODUCTION_URL].filter(
+  (host): host is string => Boolean(host),
+);
 
 export const auth = betterAuth({
   appName: product.name,
   // The object form resolves the origin per request against a host list, so
   // a preview deployment signs in on its own address while production stays
-  // pinned. Every allowed host is also a trusted origin. A custom preview
-  // domain is added here.
+  // pinned. A custom preview domain is added here. On Vercel the protocol is
+  // https, so no host is trusted over plain http. Locally it follows the
+  // request.
   baseURL: {
-    allowedHosts: [...(productionOrigin ? [new URL(productionOrigin).host] : []), "*.vercel.app", "localhost:*"],
-    protocol: "auto",
+    allowedHosts: [...(productionOrigin ? [new URL(productionOrigin).host] : []), ...vercelHosts, "localhost:*"],
+    protocol: process.env.VERCEL ? "https" : "auto",
     fallback: productionOrigin ?? "http://localhost:3000",
   },
   secret: process.env.BETTER_AUTH_SECRET,

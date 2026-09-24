@@ -1,6 +1,6 @@
 # Screens
 
-Cap: 400 words. The screens in the order they get designed, and where each stands. A screen is designed against a board, then built, then screenshotted.
+The screens in the order they get designed, and where each stands. A screen is designed against a board, then built, then screenshotted.
 
 ## 0. Shipped by starter-kit-web
 

@@ -2,7 +2,7 @@
 
 The repo every new product starts from, so no agent session begins from
 scratch. Next.js 16, Postgres on Neon through Drizzle, Better Auth with
-organisations, Tailwind v4 with a settled design system, six Claude Code
+organisations, Tailwind v4 with a settled design system, Claude Code
 skills that run the workflow, and a set of rules that fail the build instead
 of living in prose.
 
@@ -23,7 +23,7 @@ wires each of those for the product it makes. Then, inside Claude Code,
 paste the brief. The `intake` skill runs on its own, asks until nothing is
 open, writes the brief and every answer into `docs/product/intake.md`, and
 tells you to type `/setup`. No skill runs because the brief says so, and
-every skill stops for a yes before it wires, writes or builds. The six:
+every skill stops for a yes before it wires, writes or builds. The skills:
 
 | Skill | When | What it does |
 | --- | --- | --- |
@@ -33,12 +33,13 @@ every skill stops for a yes before it wires, writes or builds. The six:
 | `/feature F1` | Per feature | The loop: plan the slice, wait for a yes, design the screen, build, verify, review code and design, fix, PR, merge, production green. |
 | `/verify` | Any time | Drives the running app the way a person does. Each feature adds its steps. |
 | `/image` | When a board, mark or asset is needed | Writes the prompt from the brief and DESIGN.md, prices it, runs fal, files the result beside its prompt. |
+| `/reference` | When a site someone admires should shape the look | Reads the site's design as numbers, screenshots it, writes its design system in full, and says which of the four knobs it argues for moving. |
 
 ## Run it here
 
 ```bash
 pnpm install
-cp .env.example .env.local   # fill DATABASE_URL and BETTER_AUTH_SECRET
+cp .env.example .env.local   # fill DATABASE_URL, BETTER_AUTH_SECRET and SEED_PASSWORD
 pnpm db:push && pnpm db:seed
 pnpm exec playwright install chromium   # once per machine, for the axe run
 pnpm dev
@@ -49,12 +50,12 @@ Then `/design` for the design sheet, `/sign-in` with the seeded person, and
 
 ## What is in the box
 
-- **Design system.** Tokens in `globals.css` for colour, type, radius and layout, the primitives in `src/components/primitives/`, the shadcn set token mapped, Geist self hosted, dark mode as a token remap. A grey page with white sheets in light, a ladder in dark. An app shell with the organisation at the top, settings that open into sections, and the account at the bottom, the same shape as Kalinga's. `DESIGN.md` explains it, names the four knobs a product turns to look like itself, and `/design` renders it, modals included.
+- **Design system.** Tokens in `globals.css` for colour, type, radius and layout, the primitives in `src/components/primitives/`, the shadcn set token mapped, Geist self hosted, dark mode as a token remap. A grey page with white sheets in light, a ladder in dark. An app shell with the organisation at the top, settings that open into sections, and the account at the bottom. `DESIGN.md` explains it, names the four knobs a product turns to look like itself, and `/design` renders it, modals included.
 - **Data layer.** A lazy Neon client, a schema where every tenant table carries `organisation_id`, and a scoped query layer that cannot be called without one. The raw handle cannot leave `src/lib/db`, `src/lib/auth`, `src/lib/mail` or `src/lib/guard`.
 - **Auth.** Email and password with the address verified before a session exists, sign up open or by invitation, organisations with invitations and their people managed from one page, a personal organisation on sign up, membership checked on every request, an account page with password, email and deletion, sign in that works on preview deployments, and the real check in every page.
 - **Mail, guards, cron, errors.** One `send()` with a log provider for everything but production. A Postgres rate limiter, shared with the auth endpoints, and a honeypot on the one public form. Deletion requests recorded and listed from the command line. A purge cron with a secret. Security headers on every response, asserted by a test, with zod on every server action. Sentry for errors, off until a DSN exists. Robots, a sitemap and a link card from the route directory.
-- **Rules as tests.** No hex in components, including the url encoded kind inside a data URI. No arbitrary Tailwind values for size, spacing or type, so the tokens stay the source of truth. No dashes in prose or in commit messages. Every table classified, scoped and reachable through the scoped layer. Every token pair over its AA line in both schemes, so an accent cannot ship a failing pair. Every variable the code reads listed in the env example. Every page in the route directory and the pages doc. Every app action checking the session, every public action behind the honeypot and rate limit, every doc under its cap. No raw date arithmetic, no raw database imports, no dialog opened outside the primitives. `pnpm test` runs them, CI runs them, and Playwright walks every public route in both themes for axe and proves the modal holds open until its work resolves.
-- **Docs.** `AGENTS.md` for every agent, `docs/product/` and `docs/design/` as templates with a word cap and a prompt per section, `docs/engineering/` for the detail, and a launch list for the day a real person arrives.
+- **Rules as tests.** No hex in components, including the url encoded kind inside a data URI. No arbitrary Tailwind values for size, spacing or type, so the tokens stay the source of truth. No dashes in prose or in commit messages. Every table classified, scoped and reachable through the scoped layer. Every token pair over its AA line in both schemes, so an accent cannot ship a failing pair. Every variable the code reads listed in the env example. Every page in the route directory and the pages doc. Every app action checking the session, every public action behind the honeypot and rate limit, no sentence said twice across the docs. No raw date arithmetic, no raw database imports, no dialog opened outside the primitives. `pnpm test` runs them, CI runs them, and Playwright walks every public route in both themes for axe and proves the modal holds open until its work resolves.
+- **Docs.** `AGENTS.md` for every agent, `docs/progress.md` for where the build stands, `docs/product/` and `docs/design/` as templates with a prompt per section, `docs/engineering/` for the detail, and a launch list for the day a real person arrives.
 - **Migrations.** A committed baseline. `main` migrates, every other branch pushes.
 
 ## Versions

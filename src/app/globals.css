@@ -129,6 +129,9 @@
   --spacing-input: 48px;
   --spacing-gutter: 20px;
   --spacing-sidebar: 272px;
+  /* The smallest thing a thumb is asked to hit. A control drawn smaller
+     takes the hit utility below instead of growing. */
+  --spacing-touch: 44px;
 
   --container-auth: 480px;
   --container-prose: 640px;
@@ -199,6 +202,12 @@
   [role="button"]:not(:disabled) {
     cursor: pointer;
   }
+  /* A text link gets the same ring as a pill: 2 px of --focus, 2 px out. */
+  a:focus-visible {
+    outline: 2px solid var(--focus);
+    outline-offset: 2px;
+    border-radius: var(--radius-tag);
+  }
   ::selection {
     background: var(--tint);
     color: var(--text);
@@ -214,6 +223,21 @@
       transition-duration: 0.01ms !important;
       scroll-behavior: auto !important;
     }
+  }
+}
+
+/* A control drawn under 44 px keeps its look and still takes a 44 px tap:
+   an invisible layer centred on it, at least the touch size each way. */
+@utility hit {
+  position: relative;
+  &::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: max(100%, var(--spacing-touch));
+    height: max(100%, var(--spacing-touch));
+    transform: translate(-50%, -50%);
   }
 }
 

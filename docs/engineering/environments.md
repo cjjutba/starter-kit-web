@@ -1,6 +1,6 @@
 # Environments
 
-Cap: 300 words. Three environments, one env file each.
+Three environments, one env file each.
 
 | Variable | Local | Preview | Production |
 | --- | --- | --- | --- |
@@ -20,6 +20,19 @@ Cap: 300 words. Three environments, one env file each.
 Local reads `.env.local`, which is never committed. Preview and production
 read the Vercel project, set through `vercel env add` or the dashboard, and
 `vercel env pull` copies them down when needed.
+
+## Previews and auth
+
+A preview signs in on its own address. Auth allows the production host
+from `BETTER_AUTH_URL`, the hosts Vercel passes in at runtime
+(`VERCEL_URL`, `VERCEL_BRANCH_URL`, `VERCEL_PROJECT_PRODUCTION_URL`) and
+localhost, over https on Vercel. Those three need the project setting that
+exposes system environment variables, which is on by default. Never a
+`*.vercel.app` wildcard: every allowed host is also a trusted origin, and
+anyone can deploy a site on Vercel. A custom preview domain is one more
+entry in `src/lib/auth/server.ts`.
+
+## Secrets
 
 Secrets are generated with `openssl rand -base64 32` and never reused
 between environments.

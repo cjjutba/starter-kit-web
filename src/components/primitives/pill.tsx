@@ -8,14 +8,16 @@ import { cn } from "@/lib/utils";
 
 // The button. DESIGN.md: full pills, 52 px on phone, a near black primary,
 // a grey secondary, plain text tertiary. Loading is a spinner inside the pill,
-// never a disabled grey. Focus is a 2 px ring with a 2 px offset.
+// never a disabled grey: the pill is disabled so it cannot submit twice, but
+// keeps its full colour while busy. Focus is a 2 px ring with a 2 px offset.
+// The two small sizes keep their look and take a 44 px tap through hit.
 
 const pill = cva(
   [
     "inline-flex items-center justify-center gap-2 rounded-pill font-medium whitespace-nowrap select-none",
     "transition-colors duration-150 motion-reduce:transition-none",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-page",
-    "disabled:opacity-60 disabled:pointer-events-none",
+    "disabled:pointer-events-none disabled:not-aria-busy:opacity-60",
   ],
   {
     variants: {
@@ -27,8 +29,8 @@ const pill = cva(
       },
       size: {
         md: "h-control px-6 text-body md:h-input",
-        sm: "h-10 px-4 text-small",
-        xs: "h-8 px-3 text-label",
+        sm: "hit h-10 px-4 text-small",
+        xs: "hit h-8 px-3 text-label",
       },
       block: {
         true: "w-full",

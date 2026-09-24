@@ -1,11 +1,13 @@
 # Conventions
 
-Cap: 400 words. How code is written here. Anything a lint can check is in
+How code is written here. Anything a lint can check is in
 `eslint.config.mjs` or `tests/rules/` instead of this file.
 
 ## Files
 
-Kebab case. One component per file, named after it. A route folder holds
+Kebab case. A file is named after its main component. Small components
+that only make sense together, such as the surfaces or the field family,
+share one. A route folder holds
 `page.tsx`, and `actions.ts` beside it when the page mutates. Forms are
 client components under `src/components/<area>/`, never inside a page file.
 
@@ -23,6 +25,13 @@ Parse the form with zod. Call the scoped layer or a Better Auth API. Revalidate
 the path. Return a state object for the form, never throw for an expected
 failure. Forms use `useActionState` and show `fieldErrors` next to the field
 and `error` above the button.
+
+## Public write paths
+
+Anything a stranger can submit copies `src/app/privacy/request/actions.ts`:
+honeypot, rate limit by IP, validate, then act. A bot gets a quiet success.
+A person over the limit is told when to try again. The guards test fails
+a public action that skips either guard.
 
 ## Imports
 
@@ -52,5 +61,5 @@ Double quotes, semicolons, trailing commas, two spaces.
 ## Commits
 
 One change per commit. The subject says what changed and the body says why,
-in sentences. No dashes as punctuation. No semicolons. The reasoning has to
-survive a year.
+in sentences, under the writing rules in `AGENTS.md` rule 7. CI fails a
+branch whose messages carry a dash. The reasoning has to survive a year.

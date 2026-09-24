@@ -1,6 +1,6 @@
 # Data model
 
-Cap: 500 words. Entities and the rules that hold them together. The schema in `src/lib/db/schema.ts` is the source of truth for columns; this file says why.
+Entities and the rules that hold them together. The schema in `src/lib/db/schema.ts` is the source of truth for columns; this file says why.
 
 ## Entities
 

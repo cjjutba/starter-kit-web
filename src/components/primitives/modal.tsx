@@ -4,7 +4,7 @@ import { useState, type ReactNode } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Pill } from "./pill";
 
-// The only way to open a modal. AGENTS.md: a modal that asks a question owns
+// The only way to open a modal. DESIGN.md: a modal that asks a question owns
 // the work it starts. The confirm pill spins in place, the modal stays open
 // while the server is working, and it closes only after the promise resolves.
 // A failure keeps the modal open and puts the reason inside it, next to the

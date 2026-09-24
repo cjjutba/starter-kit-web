@@ -1,6 +1,6 @@
 # Accessibility
 
-Cap: 300 words. The record, not the rules. The rules are in `DESIGN.md`.
+The record, not the rules. The rules are in `DESIGN.md`.
 
 ## What is checked
 

@@ -1,6 +1,6 @@
 # Pages
 
-Cap: 600 words. Every page by surface, with its route and who can reach it. `src/content/routes.ts` is the machine readable version and the two must agree.
+Every page by surface, with its route and who can reach it. `src/content/routes.ts` is the machine readable version and the two must agree.
 
 ## Marketing and legal
 
@@ -34,7 +34,7 @@ Cap: 600 words. Every page by surface, with its route and who can reach it. `src
 
 ## Not pages
 
-Things that look like pages and are not: mails, the cron, the auth API. One line each on where they live. The kit ships the auth API under `src/app/api/auth`, the purge cron under `src/app/api/jobs`, and robots, the sitemap and the Open Graph image as files beside the root page, all built from the route directory.
+Things that look like pages and are not: mails, the cron, the auth API. One line each on where they live. The kit ships the auth API under `src/app/api/auth`, the purge cron under `src/app/api/jobs`, and robots, the sitemap and the Open Graph image as files beside the root page. Robots and the sitemap read the route directory. The Open Graph image reads the product name and line from `src/config.ts`.
 
 ## Open questions this list forces
 

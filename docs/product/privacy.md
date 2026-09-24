@@ -1,6 +1,6 @@
 # Privacy
 
-Cap: 400 words. This feeds `src/content/privacy.ts`, and the two must agree. RA 10173 applies to data about people in the Philippines.
+This feeds `src/content/privacy.ts`, and the two must agree. RA 10173 applies to data about people in the Philippines.
 
 ## What is collected
 

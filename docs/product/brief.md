@@ -1,6 +1,6 @@
 # Product brief
 
-Cap: 400 words. A brief that needs more is a brief that is not settled.
+A brief that needs more is a brief that is not settled.
 
 ## The one sentence
 

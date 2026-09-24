@@ -34,7 +34,7 @@ export function ThemeToggle({ className, compact = false }: { className?: string
             aria-label={label}
             onClick={() => setTheme(value)}
             className={cn(
-              "inline-flex h-8 items-center gap-1.5 rounded-pill px-2.5 text-label font-medium transition-colors duration-150 motion-reduce:transition-none",
+              "hit inline-flex h-8 items-center gap-1.5 rounded-pill px-2.5 text-label font-medium transition-colors duration-150 motion-reduce:transition-none",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-page",
               active ? "bg-page text-text" : "text-text-2 hover:text-text",
             )}
@@ -70,8 +70,8 @@ export function ThemeMenuRow() {
             aria-label={label}
             onSelect={(event) => event.preventDefault()}
             className={cn(
-              "grid size-7 cursor-pointer place-items-center rounded-full text-text-2 outline-none",
-              "data-highlighted:text-text data-[state=checked]:bg-page data-[state=checked]:text-text",
+              "hit grid size-7 cursor-pointer place-items-center rounded-full text-text-2 outline-none",
+              "data-highlighted:text-text data-highlighted:ring-2 data-highlighted:ring-focus data-[state=checked]:bg-page data-[state=checked]:text-text",
             )}
           >
             <Icon className="size-4" strokeWidth={1.5} aria-hidden />

@@ -4,6 +4,7 @@ import { AuthShell } from "@/components/auth/auth-shell";
 import { SignInForm } from "@/components/auth/sign-in-form";
 import { getSession } from "@/lib/auth/session";
 import { safeNext } from "@/lib/safe-next";
+import { authCopy } from "@/content/auth";
 
 export const metadata: Metadata = { title: "Sign in" };
 
@@ -15,7 +16,7 @@ export default async function SignInPage({ searchParams }: { searchParams: Promi
   const next = safeNext(params.next);
   if (await getSession()) redirect(next);
   const lead = params.error
-    ? "That verification link has expired or was already used. Sign in and a fresh one is sent."
+    ? authCopy.signIn.expiredLink
     : undefined;
   return (
     <AuthShell title="Sign in" lead={lead}>

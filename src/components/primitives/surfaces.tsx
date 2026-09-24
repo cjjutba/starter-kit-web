@@ -2,10 +2,11 @@ import type { ElementType, HTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 
-// The two surfaces. A Sheet is the large white panel that rises over a
-// photograph on auth pages, 24 px corners. A Card is the everyday white panel
-// on the grey page, 20 px corners. Neither has a border or a shadow. Tone does
-// the separating, so a Card placed on a Sheet must use the "field" tone.
+// The surfaces. A Sheet is the large white panel on auth pages, 24 px
+// corners. A Card is the everyday white panel on the grey page, 20 px
+// corners. A GuideCard is a note from a colleague, and a Row is one record
+// in a list. None has a border or a shadow. Tone does the separating, so a
+// Card placed on a Sheet must use the "field" tone.
 
 export function Sheet({ className, children, ...props }: HTMLAttributes<HTMLDivElement>) {
   return (
@@ -43,11 +44,10 @@ export function GuideCard({
   initials: string;
   children: ReactNode;
   className?: string;
-  /** "auto" is for auth forms: field on the sheet, sheet on the page at laptop width. */
-  tone?: "field" | "sheet" | "auto";
+  tone?: "field" | "sheet";
 }) {
-  const tones = { field: "bg-field", sheet: "bg-sheet", auto: "bg-field lg:bg-sheet" };
-  const avatarTones = { field: "bg-sheet", sheet: "bg-field", auto: "bg-sheet lg:bg-field" };
+  const tones = { field: "bg-field", sheet: "bg-sheet" };
+  const avatarTones = { field: "bg-sheet", sheet: "bg-field" };
   return (
     <div className={cn("flex gap-3 rounded-guide p-4", tones[tone], className)}>
       <span
@@ -80,7 +80,7 @@ export function Row({
   className?: string;
   href?: string;
   onClick?: () => void;
-  tone?: "sheet" | "field" | "auto";
+  tone?: "sheet" | "field";
 }) {
   const inner = (
     <>
@@ -93,7 +93,7 @@ export function Row({
   );
   const cls = cn(
     "flex w-full items-center gap-4 rounded-guide px-4 py-3.5 text-left",
-    tone === "sheet" ? "bg-sheet" : tone === "field" ? "bg-field" : "bg-field lg:bg-sheet",
+    tone === "sheet" ? "bg-sheet" : "bg-field",
     (href || onClick) && "hover:bg-divider/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-page transition-colors duration-150 motion-reduce:transition-none",
     className,
   );

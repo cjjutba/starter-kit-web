@@ -8,7 +8,9 @@ import type { FormState } from "@/components/forms/outcome";
 import { features } from "@/config";
 import { auth } from "@/lib/auth/server";
 import { requireOrganisation } from "@/lib/auth/session";
-import { slugify } from "@/lib/slug";
+import { firstErrors, idSchema } from "@/lib/forms";
+import { mailProvider } from "@/lib/mail";
+import { uniqueSlug } from "@/lib/slug";
 
 // Every action here checks the session and hands the rest to Better Auth,
 // which enforces the roles: admins and owners manage people, only an owner
@@ -37,8 +39,7 @@ export async function updateOrganisation(_previous: OrganisationFormState, formD
   const { organisationId } = await requireOrganisation();
   const parsed = detailsSchema.safeParse({ name: formData.get("name"), timezone: formData.get("timezone") });
   if (!parsed.success) {
-    const flat = z.flattenError(parsed.error).fieldErrors;
-    return { fieldErrors: { name: flat.name?.[0], timezone: flat.timezone?.[0] } };
+    return { fieldErrors: firstErrors(parsed.error) };
   }
   try {
     await auth.api.updateOrganization({
@@ -61,8 +62,7 @@ export async function inviteMember(_previous: OrganisationFormState, formData: F
   const { organisationId } = await requireOrganisation();
   const parsed = inviteSchema.safeParse({ email: formData.get("email"), role: formData.get("role") ?? "member" });
   if (!parsed.success) {
-    const flat = z.flattenError(parsed.error).fieldErrors;
-    return { fieldErrors: { email: flat.email?.[0], role: flat.role?.[0] } };
+    return { fieldErrors: firstErrors(parsed.error) };
   }
   try {
     await auth.api.createInvitation({
@@ -73,7 +73,8 @@ export async function inviteMember(_previous: OrganisationFormState, formData: F
     return { error: explain(error, "The invitation could not be sent.") };
   }
   revalidatePath("/app/settings/people");
-  return { ok: true, message: `Invitation sent to ${parsed.data.email}. With MAIL_PROVIDER=log it is in the mail log, not an inbox.` };
+  const where = mailProvider() === "log" ? " It is in the mail log, not an inbox, until mail is switched on." : "";
+  return { ok: true, message: `Invitation sent to ${parsed.data.email}.${where}` };
 }
 
 const roleSchema = z.object({
@@ -99,9 +100,11 @@ export async function updateMemberRole(_previous: OrganisationFormState, formDat
 
 export async function removeMember(memberId: string): Promise<{ error?: string }> {
   const { organisationId } = await requireOrganisation();
+  const parsed = idSchema.safeParse(memberId);
+  if (!parsed.success) return { error: "Reload the page and try again." };
   try {
     await auth.api.removeMember({
-      body: { memberIdOrEmail: memberId, organizationId: organisationId },
+      body: { memberIdOrEmail: parsed.data, organizationId: organisationId },
       headers: await headers(),
     });
   } catch (error) {
@@ -111,12 +114,17 @@ export async function removeMember(memberId: string): Promise<{ error?: string }
   return {};
 }
 
-export async function cancelInvitation(formData: FormData): Promise<void> {
+export async function cancelInvitation(_previous: OrganisationFormState, formData: FormData): Promise<OrganisationFormState> {
   await requireOrganisation();
-  const invitationId = String(formData.get("invitationId") ?? "");
-  if (!invitationId) return;
-  await auth.api.cancelInvitation({ body: { invitationId }, headers: await headers() }).catch(() => undefined);
+  const parsed = idSchema.safeParse(formData.get("invitationId"));
+  if (!parsed.success) return { error: "Reload the page and try again." };
+  try {
+    await auth.api.cancelInvitation({ body: { invitationId: parsed.data }, headers: await headers() });
+  } catch (error) {
+    return { error: explain(error, "The invitation could not be cancelled.") };
+  }
   revalidatePath("/app/settings/people");
+  return { ok: true };
 }
 
 export async function leaveOrganisation(): Promise<{ error?: string }> {
@@ -146,10 +154,9 @@ export async function createOrganisation(_previous: OrganisationFormState, formD
   if (!features.multipleOrganisations) return { error: "This product has one organisation per person." };
   const parsed = detailsSchema.safeParse({ name: formData.get("name"), timezone: formData.get("timezone") });
   if (!parsed.success) {
-    const flat = z.flattenError(parsed.error).fieldErrors;
-    return { fieldErrors: { name: flat.name?.[0], timezone: flat.timezone?.[0] } };
+    return { fieldErrors: firstErrors(parsed.error) };
   }
-  const slug = `${slugify(parsed.data.name) || "organisation"}-${crypto.randomUUID().slice(0, 8)}`;
+  const slug = uniqueSlug(parsed.data.name, "organisation");
   let created: { id: string } | null = null;
   try {
     created = await auth.api.createOrganization({

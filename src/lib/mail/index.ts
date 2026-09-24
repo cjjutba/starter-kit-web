@@ -2,10 +2,11 @@ import { Resend } from "resend";
 import { db } from "../db/client";
 import { mailLog } from "../db/schema";
 
-// One entry point for every message the app sends. The provider comes from
-// MAIL_PROVIDER: "log" writes the message to mail_log and sends nothing,
-// which is what development, previews and any sandbox use. "resend" sends
-// and then logs. Nothing else in the codebase knows how mail leaves.
+// One entry point for every message the app sends. "log" writes the message
+// to mail_log and sends nothing. "resend" sends and then logs. Resend needs
+// MAIL_PROVIDER=resend and a production deployment both, so a preview or a
+// laptop with a copied env file sends nothing (AGENTS.md rule 5). Nothing
+// else in the codebase knows how mail leaves.
 
 export interface Mail {
   to: string;
@@ -22,8 +23,19 @@ export interface MailResult {
   providerId: string | null;
 }
 
+let warned = false;
+
 export function mailProvider(): MailProvider {
-  return process.env.MAIL_PROVIDER === "resend" ? "resend" : "log";
+  const production = process.env.VERCEL_ENV === "production";
+  if (production && process.env.MAIL_PROVIDER === "resend") return "resend";
+  // Production on the log is allowed, because setup ships it that way until a
+  // Resend key exists. It still means nobody new can verify an address, so
+  // say so once per instance where the logs will show it.
+  if (production && !warned) {
+    warned = true;
+    console.warn("Mail is going to the log in production. Nobody new can verify an address until MAIL_PROVIDER=resend. See docs/engineering/launch.md.");
+  }
+  return "log";
 }
 
 export async function send(mail: Mail): Promise<MailResult> {

@@ -7,6 +7,7 @@ import { controlClass, InputField } from "@/components/primitives/field";
 import { ConfirmModal } from "@/components/primitives/modal";
 import { Pill } from "@/components/primitives/pill";
 import { Row } from "@/components/primitives/surfaces";
+import { isOwner, roleLabel, roleOptions } from "@/lib/auth/roles";
 import {
   cancelInvitation,
   deleteOrganisation,
@@ -15,6 +16,7 @@ import {
   updateMemberRole,
   type OrganisationFormState,
 } from "@/app/app/settings/actions";
+import { appCopy } from "@/content/app";
 
 // The people list and the two doors out. Anything that takes access away
 // asks in a modal that owns its work: the pill spins, the modal holds, and
@@ -27,10 +29,6 @@ export interface MemberItem {
   name: string;
   email: string;
   role: string;
-}
-
-function isOwner(role: string): boolean {
-  return role.split(",").includes("owner");
 }
 
 export function MemberRow({
@@ -49,11 +47,7 @@ export function MemberRow({
   // An admin cannot touch an owner. Better Auth refuses it, so the controls
   // are not shown either.
   const editable = canManage && !isSelf && (viewerIsOwner || !isOwner(member.role));
-  const roles = [
-    { value: "member", label: "Member" },
-    { value: "admin", label: "Admin" },
-    ...(viewerIsOwner ? [{ value: "owner", label: "Owner" }] : []),
-  ];
+  const roles = roleOptions(viewerIsOwner);
 
   return (
     <div className="flex flex-col gap-2">
@@ -73,7 +67,7 @@ export function MemberRow({
                   defaultValue={member.role}
                   aria-label={`Role for ${member.name}`}
                   // The row is field toned, so the control steps back to the sheet.
-                  className={controlClass("page", false, "h-10 w-auto appearance-none pr-8 text-small")}
+                  className={controlClass("page", false, "h-touch w-auto appearance-none pr-8 text-small")}
                 >
                   {roles.map((role) => (
                     <option key={role.value} value={role.value}>
@@ -90,7 +84,7 @@ export function MemberRow({
               </Pill>
             </div>
           ) : (
-            <span className="text-label text-text-2">{member.role}</span>
+            <span className="text-label text-text-2">{roleLabel(member.role)}</span>
           )
         }
       />
@@ -99,7 +93,7 @@ export function MemberRow({
         open={open}
         onOpenChange={setOpen}
         title={`Remove ${member.name}?`}
-        description="They lose access to everything in this organisation. What they wrote stays."
+        description={appCopy.organisation.removeConfirm}
         confirmLabel="Remove"
         pendingLabel="Removing"
         destructive
@@ -113,24 +107,28 @@ export function MemberRow({
 }
 
 export function InvitationRow({ invitation, canManage }: { invitation: { id: string; email: string; role: string | null }; canManage: boolean }) {
+  const [state, action, pending] = useActionState(cancelInvitation, initial);
   return (
-    <Row
-      tone="field"
-      title={invitation.email}
-      secondary={`Invited as ${invitation.role ?? "member"}, not yet accepted`}
-      trailing={
-        canManage ? (
-          <form action={cancelInvitation}>
-            <input type="hidden" name="invitationId" value={invitation.id} />
-            <Pill type="submit" variant="secondary" size="xs">
-              Cancel invitation
-            </Pill>
-          </form>
-        ) : (
-          <span className="text-label text-text-2">{invitation.role ?? "member"}</span>
-        )
-      }
-    />
+    <div className="flex flex-col gap-2">
+      <Row
+        tone="field"
+        title={invitation.email}
+        secondary={`Invited as ${roleLabel(invitation.role).toLowerCase()}, not yet accepted`}
+        trailing={
+          canManage ? (
+            <form action={action}>
+              <input type="hidden" name="invitationId" value={invitation.id} />
+              <Pill type="submit" variant="secondary" size="xs" loading={pending} loadingLabel="Cancelling">
+                Cancel invitation
+              </Pill>
+            </form>
+          ) : (
+            <span className="text-label text-text-2">{roleLabel(invitation.role)}</span>
+          )
+        }
+      />
+      <Outcome state={state} />
+    </div>
   );
 }
 
@@ -139,14 +137,14 @@ export function LeaveOrganisation({ name }: { name: string }) {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Pill variant="danger" size="sm" onClick={() => setOpen(true)}>
+      <Pill variant="danger" size="sm" className="h-auto min-h-10 whitespace-normal py-2" onClick={() => setOpen(true)}>
         Leave {name}
       </Pill>
       <ConfirmModal
         open={open}
         onOpenChange={setOpen}
         title={`Leave ${name}?`}
-        description="You lose access to everything in it. If you are its only owner, make someone else an owner first."
+        description={appCopy.organisation.leaveConfirm}
         confirmLabel="Leave"
         pendingLabel="Leaving"
         destructive
@@ -171,14 +169,14 @@ export function DeleteOrganisation({ name }: { name: string }) {
   }
   return (
     <>
-      <Pill variant="danger" size="sm" onClick={() => setOpen(true)}>
+      <Pill variant="danger" size="sm" className="h-auto min-h-10 whitespace-normal py-2" onClick={() => setOpen(true)}>
         Delete {name}
       </Pill>
       <ConfirmModal
         open={open}
         onOpenChange={change}
         title={`Delete ${name}?`}
-        description="Everyone loses access and everything in it is gone. This cannot be undone."
+        description={appCopy.organisation.deleteConfirm}
         confirmLabel="Delete organisation"
         pendingLabel="Deleting"
         destructive

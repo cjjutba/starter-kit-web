@@ -4,11 +4,13 @@ import { useState, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { Check, ChevronDown, ChevronsUpDown, LogOut, Menu, MoreHorizontal, NotebookPen, Plus, Settings, Shield, UserRound } from "lucide-react";
+import { Drawer } from "@/components/primitives/drawer";
 import { ThemeMenuRow } from "@/components/theme-toggle";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Sheet, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { settingsSections } from "@/content/settings-sections";
 import { authClient } from "@/lib/auth/client";
+import type { Membership } from "@/lib/auth/organisations";
+import { roleLabel } from "@/lib/auth/roles";
 import { cn } from "@/lib/utils";
 
 // The app frame. Laptop first: a 272 px sidebar behind a hairline and a top
@@ -20,26 +22,15 @@ import { cn } from "@/lib/utils";
 // Every page and action still checks on the server. A link is not a
 // permission.
 
-export interface Membership {
-  id: string;
-  name: string;
-  slug: string;
-  role: string;
-}
-
-const nav = [{ label: "Notes", href: "/app", icon: NotebookPen }];
+// Each entry is active on its own href and on every path under match, so a
+// new entry does not light up on another entry's pages.
+const nav = [{ label: "Notes", href: "/app", match: "/app/notes", icon: NotebookPen }];
 const settingsHref = "/app/settings";
 
 const menuContent = "w-64 rounded-guide border-0 bg-sheet p-1.5 ring-1 ring-divider shadow-lifted";
 const menuItem = "rounded-tag px-3 py-2.5 text-small";
 const rowTrigger =
   "flex w-full min-w-0 items-center gap-2.5 rounded-input px-2 py-2 text-left transition-colors duration-150 hover:bg-sheet focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus focus-visible:ring-offset-2 focus-visible:ring-offset-page motion-reduce:transition-none";
-
-/** "owner,admin" reads as "Owner". */
-function roleLabel(role: string): string {
-  const first = role.split(",")[0]?.trim() ?? "member";
-  return first.charAt(0).toUpperCase() + first.slice(1);
-}
 
 /** "Ana R. Reyes" reads as "AR". */
 function initials(name: string): string {
@@ -74,10 +65,16 @@ export function AppShell({
   async function switchTo(organisationId: string) {
     if (organisationId === organisation.id) return;
     setSwitching(true);
-    await authClient.organization.setActive({ organizationId: organisationId });
-    router.push("/app");
-    router.refresh();
-    setSwitching(false);
+    try {
+      const { error } = await authClient.organization.setActive({ organizationId: organisationId });
+      // A refusal leaves the person where they were, rather than on /app in
+      // the organisation they were trying to leave.
+      if (error) return;
+      router.push("/app");
+      router.refresh();
+    } finally {
+      setSwitching(false);
+    }
   }
 
   async function signOut() {
@@ -96,7 +93,7 @@ export function AppShell({
     <DropdownMenu>
       <DropdownMenuTrigger className={rowTrigger} disabled={switching}>
         {organisationMark}
-        <span className="min-w-0 flex-1 truncate text-small font-medium">{organisation.name}</span>
+        <span className="min-w-0 flex-1 break-words text-small font-medium">{organisation.name}</span>
         <ChevronsUpDown className="size-4 shrink-0 text-text-2" strokeWidth={1.5} aria-hidden />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="start" className={cn(menuContent, "w-72")}>
@@ -107,7 +104,7 @@ export function AppShell({
             onSelect={() => switchTo(membership.id)}
           >
             <span className="min-w-0">
-              <span className="block truncate">{membership.name}</span>
+              <span className="block break-words">{membership.name}</span>
               <span className="block text-label text-text-2">{roleLabel(membership.role)}</span>
             </span>
             {membership.id === organisation.id ? <Check className="size-4 shrink-0" strokeWidth={1.5} aria-label="Current" /> : null}
@@ -134,8 +131,8 @@ export function AppShell({
           {initials(user.name)}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-small font-medium">{user.name}</span>
-          <span className="block truncate text-label text-text-2">{roleLabel(organisation.role)}</span>
+          <span className="block break-words text-small font-medium">{user.name}</span>
+          <span className="block text-label text-text-2">{roleLabel(organisation.role)}</span>
         </span>
         <MoreHorizontal className="size-4 shrink-0 text-text-2" strokeWidth={1.5} aria-hidden />
       </DropdownMenuTrigger>
@@ -172,7 +169,7 @@ export function AppShell({
   const navList = (
     <ul className="flex flex-col gap-0.5">
       {nav.map((item) => {
-        const active = pathname === item.href || pathname.startsWith("/app/notes");
+        const active = pathname === item.href || pathname.startsWith(item.match);
         return (
           <li key={item.href}>
             <Link href={item.href} aria-current={active ? "page" : undefined} className={itemClass(active)}>
@@ -235,36 +232,29 @@ export function AppShell({
       <aside className="sticky top-0 hidden h-dvh w-sidebar shrink-0 flex-col border-r border-divider px-3 py-4 lg:flex print:hidden">{sidebar}</aside>
 
       <div className="min-w-0 flex-1">
-        <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-divider bg-page/95 px-2 backdrop-blur lg:hidden print:hidden">
+        <header className="sticky top-0 z-20 flex min-h-14 items-center gap-2 border-b border-divider bg-page/95 px-2 backdrop-blur lg:hidden print:hidden">
           <button
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label="Open menu"
-            className="grid size-10 shrink-0 place-items-center rounded-full text-text-2 hover:bg-pill-2 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
+            className="grid size-touch shrink-0 place-items-center rounded-full text-text-2 hover:bg-pill-2 hover:text-text focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus"
           >
             <Menu className="size-5" strokeWidth={1.5} />
           </button>
           <Link href="/app" className="flex min-w-0 items-center gap-2.5 rounded-input px-1 py-1.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-focus">
             {organisationMark}
-            <span className="min-w-0 truncate text-small font-medium">{organisation.name}</span>
+            <span className="min-w-0 break-words text-small font-medium">{organisation.name}</span>
           </Link>
         </header>
 
-        <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-          <SheetContent
-            side="left"
-            showCloseButton={false}
-            aria-describedby={undefined}
-            // A tap on any link in the sheet is a navigation, so the sheet gets out of the way.
-            onClick={(event) => {
-              if ((event.target as HTMLElement).closest("a")) setMenuOpen(false);
-            }}
-            className="flex w-sidebar max-w-sidebar flex-col gap-0 border-r border-divider bg-page px-3 py-4 text-text"
-          >
-            <SheetTitle className="sr-only">Menu</SheetTitle>
-            {sidebar}
-          </SheetContent>
-        </Sheet>
+        <Drawer
+          open={menuOpen}
+          onOpenChange={setMenuOpen}
+          title="Menu"
+          className="flex w-sidebar max-w-sidebar flex-col gap-0 border-r border-divider bg-page px-3 py-4 text-text"
+        >
+          {sidebar}
+        </Drawer>
 
         <main className="mx-auto w-full max-w-content px-4 pb-24 pt-4 md:px-6 lg:px-8 lg:pt-8 print:max-w-none print:p-0">{children}</main>
       </div>

@@ -25,8 +25,8 @@ carry on. Do not run it.
 ## 2. Paste
 
 Copy the brief into `docs/product/intake.md` under "The brief", whole and
-as sent, with the date. An amendment goes under its own dated heading,
-and the later one wins where they conflict. A brief that came as an
+as sent, with the date. An amendment goes where the file's own prompt
+says. A brief that came as an
 attachment is copied out of `.context/`, because that folder is not in
 the repository and the intake is.
 
@@ -91,6 +91,7 @@ whether they are done, not a reason to stop.
 
 Write the "Open" section. Every question still unanswered, each naming
 the skill or feature that will need it. No skill wires an open item.
+Copy the same list under "Open questions" in `docs/progress.md`.
 
 Then name the skill that comes next and say it is theirs to type. On a
 new product that is `/setup`. After an amendment on a product already
@@ -99,7 +100,7 @@ it touches. Do not run it.
 
 ## What this is not
 
-Not the brief. `/plan` writes that, under its cap, from this file. Not a
+Not the brief. `/plan` writes that from this file. Not a
 decision log. An answer here becomes an entry in
 `docs/product/decisions.md` when `/setup` or `/plan` acts on it. Not a
 form. Forty questions in one message get forty answers of one word.

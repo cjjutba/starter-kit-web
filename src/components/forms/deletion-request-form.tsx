@@ -14,7 +14,7 @@ export function DeletionRequestForm() {
 
   if (state.ok) {
     return (
-      <Card tone="tint" className="p-5" role="status">
+      <Card tone="sheet" className="p-5" role="status">
         <p className="text-body">Received. The request is logged and someone will confirm by email once it is done.</p>
       </Card>
     );

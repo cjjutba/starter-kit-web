@@ -1,6 +1,6 @@
 ---
 name: feature
-description: Runs the build loop for one feature from docs/product/features.md. Plan the slice, design the screen, build, self check, verify, review code and design at the right depth, fix, screenshot, record, PR, merge, production green. Use for every feature. Takes the feature id, for example "feature F2".
+description: Runs the build loop for one feature from docs/product/features.md. Write the spec, design the screen, build, self check, verify, review code and design at the right depth, fix, screenshot, record, PR, merge, production green. Use for every feature. Takes the feature id, for example "feature F2".
 ---
 
 # feature
@@ -14,19 +14,23 @@ Never run `vercel deploy`. The push deploys. Never push the schema to
 
 ## 1. Read
 
-Read the feature's entry in `docs/product/features.md`, its pages in
-`docs/design/pages.md`, and the glossary. If the entry has no "done means"
-line, stop and run `/plan`. Say the review depth out loud.
+Read `docs/progress.md`, the feature's entry in
+`docs/product/features.md`, its pages in `docs/design/pages.md`, and the
+glossary. If the entry has no "done means" line, stop and run `/plan`.
+Say the review depth out loud.
 
-## 2. Plan the slice, then stop
+## 2. Write the spec, then stop
 
-Write the plan in three to eight lines: the tables added, the pages added
-or changed, the actions, the states. If a table is added, say the tenancy
-classification. If the schema changes, say the migration ships first. If
-the slice needs a decision the docs do not make, ask it in the same
-message. Show the plan. **End the turn.** The build starts when the person
-says go, and their answers go in `docs/product/decisions.md` before the
-branch is cut. Then branch: `git switch -c feature/<id>-<slug>`.
+Write `docs/specs/<id>-<slug>.md` from the template in
+`docs/specs/README.md`: the screens, the boundaries it crosses, the tables
+and their tenancy classification, the migration order if the schema
+changes, the packages, and the checklist. Link it from the feature's entry
+in `features.md`. If the feature needs a decision the docs do not make,
+ask it in the same message. Show the spec. **End the turn.** The build
+starts when the person says go, and their answers go in
+`docs/product/decisions.md` before the branch is cut. Then branch: `git switch -c feature/<id>-<slug>`, and in
+`docs/progress.md` set Now to the feature and its branch and its status
+to building.
 
 ## 3. Design the screen
 
@@ -63,6 +67,8 @@ fails.
 
 Add the feature's steps to `.claude/skills/verify/SKILL.md` under a heading
 with the feature id. Run `/verify`. It has to pass end to end before review.
+Tick the spec's checklist. A box that cannot be ticked is a fix, not a
+note.
 
 ## 7. Review
 
@@ -92,7 +98,8 @@ until it is ready.
 
 ## 10. Close
 
-Mark the feature done in `docs/product/features.md`. Update
+In `docs/progress.md`, mark the feature shipped, clear Now, set Next, and
+clear any resume note it made stale. Update
 `docs/product/metrics.md` if a number changed. If this was the checkpoint
 feature, run `docs/engineering/launch.md` top to bottom before a real
 person is sent to the product. Say what is next.

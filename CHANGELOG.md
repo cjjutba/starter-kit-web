@@ -4,6 +4,44 @@ The template's own history. A product made from it keeps its decisions in
 `docs/product/decisions.md`, which starts empty. This file is about the
 template.
 
+## 2026-09-24, context that costs less and says what is true
+
+**A session knew what v1 was but not where the build stood.** Nothing
+recorded the feature in progress, what came next or what was still open,
+so every new session pieced it together from git history and guessed at
+the rest. `docs/progress.md` holds that now, every session reads it first,
+and `setup`, `intake`, `plan` and `feature` keep it current. `/feature`
+writes a spec per feature into `docs/specs/` before it builds, instead of
+a plan in chat that was gone by the next session. Rule tests hold both.
+
+**Word caps are gone, and repeats fail the build instead.** A cap cut
+complete docs short and never caught a fact written twice, which is what
+actually costs tokens and drifts. `tests/rules/no-repeats.test.ts` fails
+on a sentence, or a close paraphrase, that appears in two docs or skills.
+Each repeated explanation now has one owner and the rest link to it.
+`AGENTS.md` opens with a table from task to the docs that task needs, so
+a session reads what it needs rather than everything.
+
+**An audit of the code found real holes, now closed.** Better Auth
+trusted every `*.vercel.app` site as an origin, over http as well, so a
+reset link could carry its token to anyone's Vercel deployment. The
+redirect after sign in accepted `/\evil.com`. Mail html interpolated
+names and messages typed by strangers. `MAIL_PROVIDER=resend` sent real
+mail from previews. A handled deletion request could be handled again and
+was never purged after its year. A personal organisation could be left
+without an owner. The seed would create an owner with the password
+printed in `.env.example`. Each is fixed, most with a test.
+
+**The rules claimed more than they checked.** The dash rule missed a
+spaced hyphen between two words, the guards test missed actions declared as constants, the
+arbitrary value test missed a dozen axes and inline styles, and eslint let
+`date-fns/format` and the shadcn sheet through. Each now fails on what it
+says it fails on. The shell and primitives now meet the 44 px touch rule,
+wrap names instead of truncating them, keep errors inside the shell, and
+carry their copy in `src/content/`. The docs were checked claim by claim
+against the code, and the new `skills` test ends the "six skills" kind of
+drift.
+
 ## 2026-09-10, the reference skill
 
 **A site someone admires had nowhere to go.** The direction doc asked for

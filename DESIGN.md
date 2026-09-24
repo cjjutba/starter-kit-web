@@ -20,7 +20,7 @@ These hold whatever the product looks like.
 - Focus is always visible on keyboard focus. A 2 px ring in `--focus` with a 2 px offset, on every interactive element.
 - Every list has an empty state. Every screen handles empty, loading, error, full and overflowing before it is done. See `docs/design/states.md`.
 - Status is never carried by colour alone. A label, an icon or a strike through goes with it.
-- Contrast passes WCAG AA. `tests/rules/contrast.test.ts` computes every pair in the table at the bottom, in both schemes, and fails the build under the line.
+- Contrast passes WCAG AA. `tests/rules/contrast.test.ts` computes every pair this file relies on, in both schemes, and fails the build under the line. The contrast table below is its output, refreshed by hand.
 - Motion answers an action. Nothing animates on entry. Everything respects `prefers-reduced-motion`.
 - Sentence case everywhere. No letterspaced caps, no display face, no italics.
 - Names wrap. A name that needs two lines gets two lines. Never truncate a person's name with an ellipsis.
@@ -28,9 +28,8 @@ These hold whatever the product looks like.
 
 ## Taste
 
-The template's point of view. Kalinga settled it against generated boards
-on 2026-09-05, and the reasoning is in that project's `docs/design/direction.md`.
-Change it here and in `globals.css` together.
+The template's point of view, settled against generated boards on
+2026-09-05. Change it here and in `globals.css` together.
 
 Near white and near black. A soft grey page with white sheets and cards, no
 borders and no shadows, so surfaces are told apart by tone alone. A white card
@@ -48,10 +47,10 @@ the end of this file, and the contrast test decides whether it holds.
 Rules that follow from it.
 
 - An input is always one step of tone away from what it sits on. On a sheet it is `--field`. On the page it is `--sheet`. It never has a border.
-- A modal that asks a question owns the work it starts. The confirm pill spins in place, the modal stays open while the server is working, and it closes only after the work resolves. A failure keeps it open and puts the reason inside it. `ConfirmModal` is the only way to do this, and eslint stops anything outside `primitives/` from importing the dialog.
+- A modal that asks a question owns the work it starts. The confirm pill spins in place, the modal stays open while the server is working, and it closes only after the work resolves. A failure keeps it open and puts the reason inside it. `ConfirmModal` is the only way to do this, and eslint stops anything outside `primitives/` from importing the dialog or the sheet. The one other overlay is `Drawer`, the phone sidebar, which asks nothing and so closes on a tap outside.
 - No component measures its own. Every size, space, radius and type step is a token in `globals.css`, so the system can be restyled in one file. `text-[13px]` and `max-w-[480px]` are the way that rule gets broken quietly, and `tests/rules/no-raw-values.test.ts` fails the build on them.
 - Text links are `--text` at medium weight. No underline at rest, no blue.
-- `--tint` is for cards that show featured content. It never colours a button, a status or text. Text on a tint card is always `--text`, because `--text-2` on the tint fails AA for small text and axe catches it.
+- `--tint` is for cards that show featured content. It never colours a button, a status or text. Text on a tint card is always `--text`, because `--text-2` on the tint clears AA by a hair (4.55:1 in light) and any change to the tint or an accent pushes it under.
 - `--error` never fills anything. A red ring on the field and one line of helper text is the whole treatment. The danger pill is a secondary pill with red text.
 - One shadow, `shadow-lifted`, and only for something that floats over the page: a dialog, a menu, a toast. Nothing that sits on the page has one.
 - The sidebar sits behind a hairline in `--divider`, the one place a line separates two regions, because the sidebar and the page share the ground tone. A menu that floats takes the same hairline as a ring.
@@ -78,7 +77,7 @@ Rules that follow from it.
 | `--error` | Field ring, helper text, the danger pill | `#C4281C` | `#F97066` |
 | `--focus` | Focus ring | `#0A0A0A` | `#F5F5F7` |
 
-Light `--text-2` is `#656569` where Kalinga had `#6B6B70`. Six points darker, invisible to the eye, and it lifts secondary text on the secondary pill from 4.45 to 4.9 against the AA line of 4.5. Light `--error` is `#C4281C` where Kalinga had `#D92D20`, which was 4.4 on the page and 4.1 on the secondary pill. Kalinga took both values on 2026-09-07 and they are now the same in each repository.
+Light `--text-2` is `#656569` rather than the more common `#6B6B70`: invisible to the eye, and it lifts secondary text on the secondary pill from 4.45 to 4.9 against the AA line of 4.5. Light `--error` is `#C4281C` rather than `#D92D20`, which was 4.4 on the page and 4.1 on the secondary pill.
 
 The shadcn variables in `globals.css` point at these, so a generated
 component takes the system without edits. A product that needs a status
@@ -175,7 +174,8 @@ sheet swapped.
 `src/components/primitives/` is the design system as code. `Pill` is the
 button. `InputField`, `TextareaField` and `SelectField` own their label,
 control, helper and error together, so no screen can ship an input without
-a label. `Sheet`, `Card`, `GuideCard` and `Row` are the surfaces.
+a label. `Sheet`, `Card`, `GuideCard` and `Row` are the surfaces, and
+`Drawer` is the phone sidebar.
 `src/components/ui/` is the shadcn set for everything else, menus, dialogs,
 tables and tabs, already token mapped. `docs/design/components.md` says when
 to use which.
@@ -210,8 +210,7 @@ and `--field` to `#FFFFFF`, `#F5F5F7` and `#FFFFFF`, then `theme.light` in
 config and both manifest colours to match, which the theme test holds you
 to. Then grep for `bg-field` on anything that sits directly on the page,
 because that tone has become the ground. Dark mode is a ladder and needs
-nothing. The changelog's second and third versions record what each way
-felt like.
+nothing. Try both on `/design` before choosing.
 
 **Shape.** The six radii are one scale. Three presets:
 

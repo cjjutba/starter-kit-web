@@ -42,8 +42,8 @@ export async function requireOrganisation() {
   if (!organisation) {
     const organisationId = (await firstOrganisationFor(userId)) ?? (await createPersonalOrganisation(session.user));
     // Updates the session row. Setting the cookie fails inside a render and
-    // is ignored; the cookie cache expires within five minutes and this
-    // branch runs again until then, one indexed read each time.
+    // is ignored, which is safe: there is no cookie cache, so the next
+    // request reads the session row and finds the healed id.
     await auth.api
       .setActiveOrganization({ body: { organizationId: organisationId }, headers: await headers() })
       .catch(() => undefined);
