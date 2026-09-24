@@ -38,7 +38,7 @@ every skill stops for a yes before it wires, writes or builds. The six:
 
 ```bash
 pnpm install
-cp .env.example .env.local   # fill DATABASE_URL and BETTER_AUTH_SECRET
+cp .env.example .env.local   # fill DATABASE_URL, BETTER_AUTH_SECRET and SEED_PASSWORD
 pnpm db:push && pnpm db:seed
 pnpm exec playwright install chromium   # once per machine, for the axe run
 pnpm dev

@@ -14,6 +14,7 @@ const platform = new Map([
   ["NEXT_RUNTIME", "set by Next inside instrumentation"],
   ["CI", "set by GitHub Actions"],
   ["VERCEL_ENV", "set by Vercel, names the environment in error reports"],
+  ["NEXT_PUBLIC_VERCEL_ENV", "set by Vercel for Next, names the environment in browser error reports"],
   ["VERCEL_URL", "set by Vercel per deployment"],
   ["VERCEL_BRANCH_URL", "set by Vercel per branch"],
   ["VERCEL_PROJECT_PRODUCTION_URL", "set by Vercel, the production alias auth allows"],

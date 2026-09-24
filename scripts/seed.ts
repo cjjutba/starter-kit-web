@@ -1,6 +1,11 @@
 import { config } from "dotenv";
 import { eq } from "drizzle-orm";
 
+// The value .env.example shipped with before it went blank. It is public, so
+// an owner seeded with it is an owner anyone can sign in as. setup generates
+// a real one.
+const publicPassword = "change-this-before-anyone-else-does";
+
 // Creates one person and, through the sign up hook, their personal
 // organisation. That is the whole seed. It exists so sign in works on a
 // fresh database, and it does nothing on a database that already has the
@@ -9,8 +14,12 @@ import { eq } from "drizzle-orm";
 config({ path: ".env.local", quiet: true });
 
 async function main() {
-  const email = process.env.SEED_EMAIL ?? "owner@example.com";
-  const password = process.env.SEED_PASSWORD ?? "change-this-before-anyone-else-does";
+  // Better Auth stores addresses lowercased, so the lookup below has to match.
+  const email = (process.env.SEED_EMAIL ?? "owner@example.com").toLowerCase();
+  const password = process.env.SEED_PASSWORD;
+  if (!password || password === publicPassword) {
+    throw new Error("Set SEED_PASSWORD in .env.local first. Generate one with: openssl rand -base64 24");
+  }
   const name = process.env.SEED_NAME ?? "Owner";
 
   // Imported after the env file is loaded, because these modules read it.
