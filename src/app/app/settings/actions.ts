@@ -8,7 +8,7 @@ import type { FormState } from "@/components/forms/outcome";
 import { features } from "@/config";
 import { auth } from "@/lib/auth/server";
 import { requireOrganisation } from "@/lib/auth/session";
-import { slugify } from "@/lib/slug";
+import { uniqueSlug } from "@/lib/slug";
 
 // Every action here checks the session and hands the rest to Better Auth,
 // which enforces the roles: admins and owners manage people, only an owner
@@ -149,7 +149,7 @@ export async function createOrganisation(_previous: OrganisationFormState, formD
     const flat = z.flattenError(parsed.error).fieldErrors;
     return { fieldErrors: { name: flat.name?.[0], timezone: flat.timezone?.[0] } };
   }
-  const slug = `${slugify(parsed.data.name) || "organisation"}-${crypto.randomUUID().slice(0, 8)}`;
+  const slug = uniqueSlug(parsed.data.name, "organisation");
   let created: { id: string } | null = null;
   try {
     created = await auth.api.createOrganization({
