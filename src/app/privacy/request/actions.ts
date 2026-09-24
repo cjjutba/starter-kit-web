@@ -1,5 +1,6 @@
 "use server";
 
+import * as Sentry from "@sentry/nextjs";
 import { headers } from "next/headers";
 import { z } from "zod";
 import { product } from "@/config";
@@ -46,7 +47,14 @@ export async function requestDeletion(_previous: DeletionRequestState, formData:
 
   await recordPrivacyRequest(parsed.data);
   if (product.contactEmail) {
-    await send(deletionRequestMail({ to: product.contactEmail, ...parsed.data }));
+    // The request is recorded, which is what the person asked for. A mail
+    // failure here is ours to fix, not theirs to retry, so it is reported
+    // and the person still hears that it worked.
+    try {
+      await send(deletionRequestMail({ to: product.contactEmail, ...parsed.data }));
+    } catch (error) {
+      Sentry.captureException(error);
+    }
   }
   return { ok: true };
 }
