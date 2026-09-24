@@ -26,7 +26,9 @@ classification. If the schema changes, say the migration ships first. If
 the slice needs a decision the docs do not make, ask it in the same
 message. Show the plan. **End the turn.** The build starts when the person
 says go, and their answers go in `docs/product/decisions.md` before the
-branch is cut. Then branch: `git switch -c feature/<id>-<slug>`.
+branch is cut. Then branch: `git switch -c feature/<id>-<slug>`, and in
+`docs/progress.md` set Now to the feature and its branch and its status
+to building.
 
 ## 3. Design the screen
 
@@ -92,7 +94,8 @@ until it is ready.
 
 ## 10. Close
 
-Mark the feature done in `docs/product/features.md`. Update
+In `docs/progress.md`, mark the feature shipped, clear Now, set Next, and
+clear any resume note it made stale. Update
 `docs/product/metrics.md` if a number changed. If this was the checkpoint
 feature, run `docs/engineering/launch.md` top to bottom before a real
 person is sent to the product. Say what is next.

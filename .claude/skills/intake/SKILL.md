@@ -91,6 +91,7 @@ whether they are done, not a reason to stop.
 
 Write the "Open" section. Every question still unanswered, each naming
 the skill or feature that will need it. No skill wires an open item.
+Copy the same list under "Open questions" in `docs/progress.md`.
 
 Then name the skill that comes next and say it is theirs to type. On a
 new product that is `/setup`. After an amendment on a product already

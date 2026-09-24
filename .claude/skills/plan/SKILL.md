@@ -59,6 +59,7 @@ the cap means cut, not exceed.
 ## Ends when
 
 Every file in the order is written within its cap, the feature list has
-its "done means" lines, `routes.ts` matches `pages.md` and `pnpm test` is
-green. Say so, list the features with their depth, and stop. `/feature F1`
+its "done means" lines, every feature is in the table in
+`docs/progress.md` as planned with Next set to `/feature F1`, `routes.ts`
+matches `pages.md`, and `pnpm test` is green. Say so, list the features with their depth, and stop. `/feature F1`
 is the person's to type after they have read the docs.

@@ -51,7 +51,7 @@ Never push the schema to `main`. It migrates.
    Say plainly that production mail stays in the log until a Resend key and a verified sender exist, and that until then nobody new can verify an address on production. The seeded owner is verified and is the way in.
 10. **Record.** `gh api repos/cjjutba/starter-kit-web/commits/main --jq .sha` and write `.starter-kit` with `template`, `commit` and `date` lines. Append decision 001 to `docs/product/decisions.md`: started from starter-kit-web at that commit, the name, the slug, where the users are and the region, the shape and the two flags, which design knobs moved and which stayed, the Neon project, the Vercel project.
 11. **Commit and push.** `git add -A`, commit as "Start <name> from starter-kit-web" with the reasoning in the body, push. Watch with `vercel ls` or the Vercel MCP until the production deployment is ready.
-12. **Report, then stop.** The production URL, where the seed credentials are, and what stays manual. `docs/engineering/launch.md` is that list. Point at it rather than repeating it. Do not start `/plan`. Say what to review, the commit, the production URL and decision 001, and that `/plan` is theirs to type once they have.
+12. **Report, then stop.** Update `docs/progress.md` first: Phase becomes "Set up, no features planned", Next becomes `/plan`, and anything left for later goes under Open questions. Then the report: the production URL, where the seed credentials are, and what stays manual. `docs/engineering/launch.md` is that list. Point at it rather than repeating it. Do not start `/plan`. Say what to review, the commit, the production URL and decision 001, and that `/plan` is theirs to type once they have.
 
 ## What the person does next
 

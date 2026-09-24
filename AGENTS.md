@@ -8,6 +8,9 @@ the data model, the workflow and the engineering detail. This file stays
 short so it is cheap to load every session. When a topic needs more than a
 paragraph, it points at a doc instead of growing.
 
+**Start here.** Read `docs/progress.md` first, every session. It says
+what is being built, what is next and what is still open.
+
 ---
 
 ## Non-negotiables
