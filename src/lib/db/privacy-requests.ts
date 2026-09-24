@@ -1,4 +1,5 @@
-import { asc, eq } from "drizzle-orm";
+import { and, asc, eq, lt } from "drizzle-orm";
+import { daysBefore } from "../time";
 import { db as defaultDb, type Database } from "./client";
 import { privacyRequests } from "./schema";
 
@@ -21,7 +22,20 @@ export async function markPrivacyRequestDone(id: string, db: Database = defaultD
   const rows = await db
     .update(privacyRequests)
     .set({ status: "done", handledAt: new Date() })
-    .where(eq(privacyRequests.id, id))
+    .where(and(eq(privacyRequests.id, id), eq(privacyRequests.status, "open")))
     .returning({ id: privacyRequests.id });
   return rows.length > 0;
+}
+
+/**
+ * Deletes requests handled longer ago than this. The privacy notice keeps a
+ * handled request for a year as the record that it was made and done, and
+ * no longer. Open requests are never purged. Returns the count.
+ */
+export async function purgeHandledPrivacyRequests(olderThanDays: number, db: Database = defaultDb): Promise<number> {
+  const rows = await db
+    .delete(privacyRequests)
+    .where(and(eq(privacyRequests.status, "done"), lt(privacyRequests.handledAt, daysBefore(olderThanDays))))
+    .returning({ id: privacyRequests.id });
+  return rows.length;
 }
