@@ -36,8 +36,9 @@ which is how the seed and a fresh product get their owner.
 
 ## Previews
 
-`baseURL` is a host list: the production host from `BETTER_AUTH_URL`,
-`*.vercel.app` and localhost. Add a custom preview domain to the list.
+`baseURL` is a host list, and every host on it is also trusted for
+callbacks, so it never holds a wildcard. `environments.md` says which
+hosts and why.
 
 ## Rate limiting
 
