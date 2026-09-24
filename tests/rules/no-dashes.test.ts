@@ -13,7 +13,7 @@ const extensions = [".md", ".ts", ".tsx", ".mjs", ".css", ".json", ".yml", ".yam
 
 // A hyphen with a space on each side is a dash standing in, which AGENTS.md
 // rule 7 names as well. Prose only, because code subtracts.
-const standIn = / \S - \S/;
+const standIn = / \S+ - \S+/;
 
 describe("no dashes as punctuation", () => {
   it("has no hyphen standing in for a dash in any markdown file", () => {

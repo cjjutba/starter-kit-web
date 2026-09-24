@@ -11,14 +11,28 @@ import { walk } from "../walk";
 // public write path follows the honeypot and rate limit pattern in
 // src/app/privacy/request/actions.ts, and a cron route checks CRON_SECRET.
 
-function exportedActions(file: string): { name: string; body: string }[] {
-  const source = readFileSync(file, "utf8");
-  const parts = source.split(/^export async function /m).slice(1);
-  return parts.map((part) => ({ name: part.slice(0, part.indexOf("(")), body: part }));
+// Comments out, so a require call mentioned in a comment does not count.
+function code(source: string): string {
+  return source.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
 }
 
+/** Each exported action and the code up to the next export, in either declaration form. */
+function exportedActions(file: string): { name: string; body: string }[] {
+  const source = code(readFileSync(file, "utf8"));
+  const parts = source.split(/^export (?=async function |const \w+ = async)/m).slice(1);
+  return parts.map((part) => ({ name: part.match(/^(?:async function|const) (\w+)/)?.[1] ?? "unknown", body: part }));
+}
+
+// Every file that declares server actions. conventions.md keeps them in
+// actions.ts beside the page, so the checks below know where to look.
+const serverFiles = walk("src").filter((file) => /\.(ts|tsx)$/.test(file) && /^\s*["']use server["']/m.test(code(readFileSync(file, "utf8"))));
+
 describe("every server action checks who is calling", () => {
-  const appActions = walk("src/app/app").filter((file) => file.endsWith("/actions.ts"));
+  const appActions = serverFiles.filter((file) => file.startsWith("src/app/app/"));
+
+  it("keeps every server action in an actions.ts file", () => {
+    expect(serverFiles.filter((file) => !file.endsWith("/actions.ts"))).toEqual([]);
+  });
 
   it("has at least one action file under the app, so the rule is exercised", () => {
     expect(appActions.length).toBeGreaterThan(0);
@@ -34,8 +48,7 @@ describe("every server action checks who is calling", () => {
   });
 
   it("guards every public action with the honeypot and the rate limit", () => {
-    const publicActions = walk("src/app")
-      .filter((file) => file.endsWith("/actions.ts") && !file.startsWith("src/app/app/"));
+    const publicActions = serverFiles.filter((file) => !file.startsWith("src/app/app/"));
     const unguarded = publicActions.flatMap((file) =>
       exportedActions(file)
         .filter(({ body }) => !body.includes("isBot(") || !body.includes("rateLimit("))

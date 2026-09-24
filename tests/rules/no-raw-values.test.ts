@@ -9,7 +9,10 @@ import { walk } from "../walk";
 // quietly, one component at a time, until nothing can be restyled centrally.
 //
 // This catches the design axes only. Variant selectors like data-[state=open]
-// are not design values and are left alone.
+// are not design values and are left alone. Neither is the v4 form that
+// names a variable, h-(--input), because the variable is the token. An
+// inline style attribute is the other way round the rule, so it is caught
+// too.
 
 const axes = new Set([
   "text",
@@ -53,6 +56,38 @@ const axes = new Set([
   "bottom",
   "left",
   "inset",
+  "inset-x",
+  "inset-y",
+  "start",
+  "end",
+  "ps",
+  "pe",
+  "ms",
+  "me",
+  "rounded-t",
+  "rounded-b",
+  "rounded-l",
+  "rounded-r",
+  "rounded-s",
+  "rounded-e",
+  "rounded-tl",
+  "rounded-tr",
+  "rounded-bl",
+  "rounded-br",
+  "border-t",
+  "border-b",
+  "border-l",
+  "border-r",
+  "border-x",
+  "border-y",
+  "outline",
+  "outline-offset",
+  "ring-offset",
+  "z",
+  "grid-cols",
+  "grid-rows",
+  "translate-x",
+  "translate-y",
 ]);
 
 // src/components/ui is the shadcn set. The CLI regenerates those files, so
@@ -60,9 +95,12 @@ const axes = new Set([
 // product surface is.
 const vendored = "src/components/ui/";
 
-// One exception, with its reason. A honeypot has to leave the viewport
-// without leaving the document, and no spacing token should exist for that.
-const allowed = new Map([["src/components/forms/honeypot.tsx", "moves a honeypot off screen, which is a technique and not a design value"]]);
+// The exceptions, each with its reason.
+const allowed = new Map([
+  ["src/components/forms/honeypot.tsx", "moves a honeypot off screen, which is a technique and not a design value"],
+  ["src/app/global-error.tsx", "renders when the root layout failed, so the stylesheet with the tokens may not be there"],
+  ["src/app/opengraph-image.tsx", "rendered by Satori to a PNG, which reads inline styles and no stylesheet"],
+]);
 
 const arbitrary = /([a-z][a-z-]*)-\[/g;
 
@@ -71,6 +109,7 @@ function offendersIn(file: string): string[] {
   readFileSync(file, "utf8")
     .split("\n")
     .forEach((line, index) => {
+      if (/\bstyle=\{\{/.test(line)) found.push(`${file}:${index + 1}: inline style in ${line.trim()}`);
       for (const match of line.matchAll(arbitrary)) {
         const axis = match[1];
         if (!axes.has(axis)) continue;
@@ -87,7 +126,7 @@ function offendersIn(file: string): string[] {
 describe("no raw design values in components", () => {
   it("uses tokens, not arbitrary Tailwind values, for size, spacing and type", () => {
     const offenders = walk("src")
-      .filter((file) => file.endsWith(".tsx"))
+      .filter((file) => /\.tsx?$/.test(file))
       .filter((file) => !file.includes(vendored))
       .filter((file) => !allowed.has(file))
       .flatMap(offendersIn);

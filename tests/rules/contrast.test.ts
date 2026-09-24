@@ -67,22 +67,30 @@ const pairs: [string, string, number, string?][] = [
 
 const schemes = { light: block(":root"), dark: block(".dark") };
 
-describe("every token pair DESIGN.md relies on clears its line", () => {
-  const rows: string[] = [];
+function ratioOf(tokens: Record<string, string>, foreground: string, background: string): number {
+  return contrast(tokens[foreground], tokens[background]);
+}
 
+describe("every token pair DESIGN.md relies on clears its line", () => {
   for (const [scheme, tokens] of Object.entries(schemes)) {
     for (const [foreground, background, minimum, reason] of pairs) {
       it(`${scheme}: --${foreground} on --${background} is at least ${minimum}:1`, () => {
         expect(tokens[foreground], `--${foreground} has no hex value in the ${scheme} block`).toBeDefined();
         expect(tokens[background], `--${background} has no hex value in the ${scheme} block`).toBeDefined();
-        const ratio = contrast(tokens[foreground], tokens[background]);
-        rows.push(`${scheme.padEnd(5)} --${foreground} on --${background}: ${ratio.toFixed(2)}${reason ? `, ${reason}` : ""}`);
+        const ratio = ratioOf(tokens, foreground, background);
         expect(ratio, `--${foreground} on --${background} in ${scheme} is ${ratio.toFixed(2)}:1${reason ? ` (${reason})` : ""}`).toBeGreaterThanOrEqual(minimum);
       });
     }
   }
 
+  // Computes its own rows, so it runs alone under -t and does not depend on
+  // the tests above having run first.
   it("prints the table so DESIGN.md can be refreshed from it", () => {
+    const rows = Object.entries(schemes).flatMap(([scheme, tokens]) =>
+      pairs
+        .filter(([foreground, background]) => tokens[foreground] && tokens[background])
+        .map(([foreground, background, , reason]) => `${scheme.padEnd(5)} --${foreground} on --${background}: ${ratioOf(tokens, foreground, background).toFixed(2)}${reason ? `, ${reason}` : ""}`),
+    );
     console.log(["Contrast, as computed:", ...rows].join("\n"));
     expect(rows.length).toBe(pairs.length * 2);
   });
