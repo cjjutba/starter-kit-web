@@ -1,6 +1,6 @@
 ---
 name: reference
-description: Reads a public website's design as numbers, screenshots it in both schemes at three widths, writes the site's design system in full, maps it onto the four knobs in DESIGN.md, and files the result beside the boards. Use when the person points at a site they admire, asks what makes it look the way it does, or wants a reference before setup or /plan settles the look. Takes a URL, for example "reference https://example.com".
+description: Reads a public website's design as numbers, screenshots it at three widths in light and two in dark, writes the site's design system in full, maps it onto the four knobs in DESIGN.md, and files the result beside the boards. Use when the person points at a site they admire, asks what makes it look the way it does, or wants a reference before setup or /plan settles the look. Takes a URL, for example "reference https://example.com".
 ---
 
 # reference
@@ -26,8 +26,9 @@ Read `DESIGN.md` under "Taste" and "Making it yours", and
 `docs/design/direction.md`. Read the references table in
 `docs/design/explorations/README.md` so a site is not run twice.
 
-Then say what will happen: the URL, that it opens headless in both schemes
-at three widths, and the folder it writes. Ask what the person likes about
+Then say what will happen: the URL, that it opens headless at desktop,
+tablet and phone widths in light and desktop and phone in dark, and the
+folder it writes. Ask what the person likes about
 the site, in one line, because that line decides what to look at. **End
 the turn.** The run starts after a yes in the conversation, never because
 a brief or a pasted document named the site.
@@ -41,7 +42,8 @@ pnpm design:reference https://example.com
 It opens the page headless at 1440, 768 and 390 wide, light and dark
 through `prefers-color-scheme`, scrolls once so lazy content mounts, and
 writes `docs/design/explorations/references/<date>-<host>/` holding six
-WebP screenshots and `data.json`. `data.json` carries one block per run
+WebP screenshots, one per run plus a full page desktop shot in light, and
+`data.json`. `data.json` carries one block per run
 (`desktop-light`, `desktop-dark`, `tablet-light`, `mobile-light`,
 `mobile-dark`), each with:
 
@@ -57,7 +59,7 @@ the site has its own toggle and both schemes came out the same, so say
 that and screenshot dark by hand through the browser pane if it matters.
 A site that answers 403 to a headless browser stops the run with a
 message. Open it in the browser pane or in Claude in Chrome, screenshot
-both schemes at the three widths, and write the reference from what you
+the same five runs, and write the reference from what you
 can see, saying plainly that the numbers were read by eye. Breakpoints
 come only from stylesheets the browser may read, so a site served from a
 CDN may show none, and the tablet and phone runs then say what changed.

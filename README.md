@@ -2,7 +2,7 @@
 
 The repo every new product starts from, so no agent session begins from
 scratch. Next.js 16, Postgres on Neon through Drizzle, Better Auth with
-organisations, Tailwind v4 with a settled design system, six Claude Code
+organisations, Tailwind v4 with a settled design system, Claude Code
 skills that run the workflow, and a set of rules that fail the build instead
 of living in prose.
 
@@ -23,7 +23,7 @@ wires each of those for the product it makes. Then, inside Claude Code,
 paste the brief. The `intake` skill runs on its own, asks until nothing is
 open, writes the brief and every answer into `docs/product/intake.md`, and
 tells you to type `/setup`. No skill runs because the brief says so, and
-every skill stops for a yes before it wires, writes or builds. The six:
+every skill stops for a yes before it wires, writes or builds. The skills:
 
 | Skill | When | What it does |
 | --- | --- | --- |
@@ -33,6 +33,7 @@ every skill stops for a yes before it wires, writes or builds. The six:
 | `/feature F1` | Per feature | The loop: plan the slice, wait for a yes, design the screen, build, verify, review code and design, fix, PR, merge, production green. |
 | `/verify` | Any time | Drives the running app the way a person does. Each feature adds its steps. |
 | `/image` | When a board, mark or asset is needed | Writes the prompt from the brief and DESIGN.md, prices it, runs fal, files the result beside its prompt. |
+| `/reference` | When a site someone admires should shape the look | Reads the site's design as numbers, screenshots it, writes its design system in full, and says which of the four knobs it argues for moving. |
 
 ## Run it here
 
@@ -49,7 +50,7 @@ Then `/design` for the design sheet, `/sign-in` with the seeded person, and
 
 ## What is in the box
 
-- **Design system.** Tokens in `globals.css` for colour, type, radius and layout, the primitives in `src/components/primitives/`, the shadcn set token mapped, Geist self hosted, dark mode as a token remap. A grey page with white sheets in light, a ladder in dark. An app shell with the organisation at the top, settings that open into sections, and the account at the bottom, the same shape as Kalinga's. `DESIGN.md` explains it, names the four knobs a product turns to look like itself, and `/design` renders it, modals included.
+- **Design system.** Tokens in `globals.css` for colour, type, radius and layout, the primitives in `src/components/primitives/`, the shadcn set token mapped, Geist self hosted, dark mode as a token remap. A grey page with white sheets in light, a ladder in dark. An app shell with the organisation at the top, settings that open into sections, and the account at the bottom. `DESIGN.md` explains it, names the four knobs a product turns to look like itself, and `/design` renders it, modals included.
 - **Data layer.** A lazy Neon client, a schema where every tenant table carries `organisation_id`, and a scoped query layer that cannot be called without one. The raw handle cannot leave `src/lib/db`, `src/lib/auth`, `src/lib/mail` or `src/lib/guard`.
 - **Auth.** Email and password with the address verified before a session exists, sign up open or by invitation, organisations with invitations and their people managed from one page, a personal organisation on sign up, membership checked on every request, an account page with password, email and deletion, sign in that works on preview deployments, and the real check in every page.
 - **Mail, guards, cron, errors.** One `send()` with a log provider for everything but production. A Postgres rate limiter, shared with the auth endpoints, and a honeypot on the one public form. Deletion requests recorded and listed from the command line. A purge cron with a secret. Security headers on every response, asserted by a test, with zod on every server action. Sentry for errors, off until a DSN exists. Robots, a sitemap and a link card from the route directory.

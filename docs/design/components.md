@@ -14,7 +14,11 @@ What exists, when to use which, and what to reach for when nothing fits.
 | `Card` | The everyday panel, 20 px corners, `tone` picks sheet, field or tint. | A list row. |
 | `GuideCard` | A note from a colleague during onboarding. | Anything on sign in. |
 | `Row` | A row in a list of records, with an optional secondary line and trailing content. | Tables with more than three columns. Use `ui/table`. |
-| `ThemeToggle`, `ThemeMenuRow` | The three way theme switch, on its own or as the appearance row inside the account menu. | |
+| `Drawer` | The phone sidebar, sliding in from the left. It asks nothing, so it closes on a tap outside, Escape or any link. | Anything that asks a question. Use `ConfirmModal`. |
+
+`ThemeToggle` and `ThemeMenuRow`, in `src/components/theme-toggle.tsx` rather than `primitives/`, are the three way theme switch, on its own or as the appearance row inside the account menu.
+
+A control drawn under 44 px, such as a small pill, takes the `hit` utility from `globals.css`: its look stays and its tap area becomes 44 px.
 
 ## shadcn, in `src/components/ui/`
 

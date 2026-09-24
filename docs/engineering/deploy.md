@@ -14,9 +14,10 @@ to a commit, and the push would build a second one anyway.
 
 ## First time
 
-`/setup` links the Vercel project, connects it to the GitHub repo with
-`vercel git connect`, and sets the environment variables for preview and
-production. Without the git connection the push deploys nothing.
+`/setup` links the Vercel project and sets the environment variables for
+preview and production. Linking connects the GitHub repo when the remote
+already exists, and `vercel git connect` confirms it. Without that
+connection the push deploys nothing.
 
 ## Migrations
 

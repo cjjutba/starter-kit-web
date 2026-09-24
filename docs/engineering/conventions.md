@@ -5,7 +5,9 @@ How code is written here. Anything a lint can check is in
 
 ## Files
 
-Kebab case. One component per file, named after it. A route folder holds
+Kebab case. A file is named after its main component. Small components
+that only make sense together, such as the surfaces or the field family,
+share one. A route folder holds
 `page.tsx`, and `actions.ts` beside it when the page mutates. Forms are
 client components under `src/components/<area>/`, never inside a page file.
 
