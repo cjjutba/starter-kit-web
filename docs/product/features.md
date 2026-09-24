@@ -1,6 +1,6 @@
 # Features
 
-Numbered, in build order. Every feature has a "done means" line that a stranger could check, and a review depth. Mark the checkpoint.
+The index of v1. Numbered, in build order. Every feature has a "done means" line that a stranger could check, a review depth, and once `/feature` plans it, a link to its spec in `docs/specs/`. Mark the checkpoint. Status lives in `docs/progress.md`.
 
 ## F0 Foundation
 
@@ -15,6 +15,8 @@ What it is, in two sentences. Which pages it adds or changes.
 **Done means:** the observable thing a stranger can check.
 
 **Review depth:** deep or normal, and why.
+
+**Spec:** `docs/specs/F1-slug.md`, written when `/feature F1` plans it.
 
 ## F2
 
