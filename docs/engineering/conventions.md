@@ -52,5 +52,5 @@ Double quotes, semicolons, trailing commas, two spaces.
 ## Commits
 
 One change per commit. The subject says what changed and the body says why,
-in sentences. No dashes as punctuation. No semicolons. The reasoning has to
-survive a year.
+in sentences, under the writing rules in `AGENTS.md` rule 7. CI fails a
+branch whose messages carry a dash. The reasoning has to survive a year.

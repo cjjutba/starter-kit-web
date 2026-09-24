@@ -8,7 +8,7 @@ What exists, when to use which, and what to reach for when nothing fits.
 | --- | --- | --- |
 | `Pill` | Every button. Primary, secondary, text, danger. Loading is a spinner inside it. | Links that read as text. Use `Link` with `font-medium`. |
 | `InputField`, `TextareaField`, `SelectField` | Every form control. They own label, helper and error. `SelectField` takes a name and a default in a server action form, or a value and an `onChange`. | Search boxes and row controls inside a toolbar, which use `controlClass` with an `aria-label`. |
-| `Modal`, `ConfirmModal` | The only way to open a dialog. `ConfirmModal` spins the pill, holds open while the work runs, and shows a returned string as the reason. Every destructive action in the app uses it. | Anything that is not a question. |
+| `Modal`, `ConfirmModal` | The only way to open a dialog. `DESIGN.md` says what `ConfirmModal` owns. Every destructive action in the app uses it. | Anything that is not a question. |
 | `Outcome`, in `forms/` | The line under a form after it returns: an error in red, a message quietly. | |
 | `Sheet` | The large panel on auth pages, 24 px corners. | Content inside the app. |
 | `Card` | The everyday panel, 20 px corners, `tone` picks sheet, field or tint. | A list row. |

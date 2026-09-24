@@ -104,8 +104,7 @@ the order.
 
 ## Saving progress
 
-Commit messages follow the writing rules in `../AGENTS.md`. No dashes as
-punctuation, no semicolons, and enough detail that the reasoning survives.
+Commit messages follow `engineering/conventions.md`.
 
 Add to `product/decisions.md` when something is decided. Take a screenshot
 into `design/screenshots/` when a screen changes. Both are much easier on

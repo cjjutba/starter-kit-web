@@ -21,10 +21,8 @@ production. Without the git connection the push deploys nothing.
 ## Migrations
 
 Before merging a PR that ships a migration, run `pnpm db:migrate` with
-`DATABASE_URL` pointing at the production branch. `data.md` has the order.
-The code that needs the change merges after the migration is applied,
-never before. Setup applies the baseline the same way before the first
-deploy, and `main` is never pushed to.
+`DATABASE_URL` pointing at the production branch. `data.md` owns the order
+and the rules.
 
 ## Crons
 
