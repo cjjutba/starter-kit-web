@@ -34,6 +34,7 @@ export default async function PeoplePage() {
 
       <Card as="section" className="flex flex-col gap-4 p-5">
         <h2 className="text-heading font-medium">People</h2>
+        {full ? null : <p className="text-body text-text-2">The list of people could not load. Reload the page to try again.</p>}
         <ul className="flex flex-col gap-2">
           {members.map((item) => (
             <li key={item.id}>

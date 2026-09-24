@@ -45,7 +45,9 @@ export function ResetForm({ token }: { token: string | null }) {
     return (
       <Card tone="field" className="flex flex-col gap-4 p-5" role="status">
         <p className="text-body">
-          {token ? "Your password is changed." : "If that address has an account, a reset link is on its way. In development it is in the mail log."}
+          {token
+            ? "Your password is changed."
+            : `If that address has an account, a reset link is on its way.${process.env.NODE_ENV === "production" ? "" : " In development it is in the mail log."}`}
         </p>
         <div>
           <Pill asChild size="sm">

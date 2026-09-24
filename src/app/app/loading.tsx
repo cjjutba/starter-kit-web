@@ -7,7 +7,8 @@ import { Skeleton } from "@/components/ui/skeleton";
 
 export default function Loading() {
   return (
-    <div className="flex flex-col gap-6" aria-busy="true" aria-label="Loading">
+    <div className="flex flex-col gap-6" role="status" aria-busy="true">
+      <span className="sr-only">Loading</span>
       <Skeleton className="h-8 w-40 rounded-tag bg-sheet" />
       <div className="flex flex-col gap-3">
         {[0, 1, 2].map((index) => (
