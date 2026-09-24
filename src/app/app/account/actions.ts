@@ -6,6 +6,8 @@ import { z } from "zod";
 import type { FormState } from "@/components/forms/outcome";
 import { auth } from "@/lib/auth/server";
 import { requireSession } from "@/lib/auth/session";
+import { firstErrors } from "@/lib/forms";
+import { mailProvider } from "@/lib/mail";
 
 // The account belongs to the person, not the organisation, so these check
 // the session and call Better Auth. Deleting the account is a client call
@@ -28,7 +30,7 @@ export async function updateName(_previous: AccountFormState, formData: FormData
   await requireSession();
   const parsed = nameSchema.safeParse({ name: formData.get("name") });
   if (!parsed.success) {
-    return { fieldErrors: { name: z.flattenError(parsed.error).fieldErrors.name?.[0] } };
+    return { fieldErrors: firstErrors(parsed.error) };
   }
   try {
     await auth.api.updateUser({ body: { name: parsed.data.name }, headers: await headers() });
@@ -51,8 +53,7 @@ export async function changePassword(_previous: AccountFormState, formData: Form
     newPassword: formData.get("newPassword"),
   });
   if (!parsed.success) {
-    const flat = z.flattenError(parsed.error).fieldErrors;
-    return { fieldErrors: { currentPassword: flat.currentPassword?.[0], newPassword: flat.newPassword?.[0] } };
+    return { fieldErrors: firstErrors(parsed.error) };
   }
   try {
     await auth.api.changePassword({
@@ -73,7 +74,7 @@ export async function changeEmail(_previous: AccountFormState, formData: FormDat
   const { user } = await requireSession();
   const parsed = emailSchema.safeParse({ newEmail: formData.get("newEmail") });
   if (!parsed.success) {
-    return { fieldErrors: { newEmail: z.flattenError(parsed.error).fieldErrors.newEmail?.[0] } };
+    return { fieldErrors: firstErrors(parsed.error) };
   }
   if (parsed.data.newEmail.toLowerCase() === user.email.toLowerCase()) {
     return { fieldErrors: { newEmail: "That is already your address." } };
@@ -88,6 +89,6 @@ export async function changeEmail(_previous: AccountFormState, formData: FormDat
   }
   return {
     ok: true,
-    message: `Two mails are on their way. Approve the change from ${user.email}, then confirm ${parsed.data.newEmail}. With MAIL_PROVIDER=log both are in the mail log.`,
+    message: `Two mails are on their way. Approve the change from ${user.email}, then confirm ${parsed.data.newEmail}.${mailProvider() === "log" ? " Both are in the mail log until mail is switched on." : ""}`,
   };
 }

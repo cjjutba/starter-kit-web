@@ -113,24 +113,28 @@ export function MemberRow({
 }
 
 export function InvitationRow({ invitation, canManage }: { invitation: { id: string; email: string; role: string | null }; canManage: boolean }) {
+  const [state, action, pending] = useActionState(cancelInvitation, initial);
   return (
-    <Row
-      tone="field"
-      title={invitation.email}
-      secondary={`Invited as ${invitation.role ?? "member"}, not yet accepted`}
-      trailing={
-        canManage ? (
-          <form action={cancelInvitation}>
-            <input type="hidden" name="invitationId" value={invitation.id} />
-            <Pill type="submit" variant="secondary" size="xs">
-              Cancel invitation
-            </Pill>
-          </form>
-        ) : (
-          <span className="text-label text-text-2">{invitation.role ?? "member"}</span>
-        )
-      }
-    />
+    <div className="flex flex-col gap-2">
+      <Row
+        tone="field"
+        title={invitation.email}
+        secondary={`Invited as ${invitation.role ?? "member"}, not yet accepted`}
+        trailing={
+          canManage ? (
+            <form action={action}>
+              <input type="hidden" name="invitationId" value={invitation.id} />
+              <Pill type="submit" variant="secondary" size="xs" loading={pending} loadingLabel="Cancelling">
+                Cancel invitation
+              </Pill>
+            </form>
+          ) : (
+            <span className="text-label text-text-2">{invitation.role ?? "member"}</span>
+          )
+        }
+      />
+      <Outcome state={state} />
+    </div>
   );
 }
 
