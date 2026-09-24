@@ -28,7 +28,9 @@ e2e/screens/
 # os
 .DS_Store
 
-# agent and tooling scratch
+# agent and tooling scratch. .context/ holds attached briefs, which intake
+# copies into docs/product/intake.md, so the folder itself never ships.
+.context/
 .codex/
 .superpowers/
 tmp/

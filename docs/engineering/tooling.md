@@ -43,4 +43,6 @@ reports.
 ## Permissions
 
 `.claude/settings.json` allows the commands the skills run: pnpm, node,
-git except the destructive commands, `gh`, `vercel` and `openssl rand`.
+`git status`, `diff`, `log`, `add`, `commit`, `push` and `switch`, `gh`,
+`vercel` and `openssl rand`. Nothing that discards work is on the list, so
+a reset, a checkout of a file or a force push still asks.
